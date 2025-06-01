@@ -191,6 +191,14 @@ main {
     stroke-width: 3;
 }
 
+/* Style for new "direct jump" links */
+.direct-link-path {
+    stroke: #8e44ad; /* A distinct color, e.g., purple */
+    stroke-width: 2.5;
+    stroke-dasharray: 5 5; /* Makes it dashed to show it's a "jump" */
+    transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
 /* Node Info Popup Styles */
 .node-info-popup {
     display: none; /* Hidden by default */
