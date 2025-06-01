@@ -381,14 +381,14 @@ if (nodesForLayout.size === 0) {
     flatTreeData.forEach(node => {
         const pos = nodePositions.get(node.id);
         if (pos) {
-            // Determine if node should be visible
-            const isRevealed = revealedNodes.has(node.id);
             const isMystery = (mysterySpecies && node.id === mysterySpecies.id);
-            const isGuessed = guessedSpeciesHistory.includes(node.id);
+            const isGuessed = guessedSpeciesHistory.includes(node.id); // Check if this specific node was a guess
+            const isRevealedNode = revealedNodes.has(node.id); // Check if this node is in our revealed set
 
-            // Only draw revealed nodes and their direct children in revealed path
-            if (!isRevealed && !isMystery && !isGuessed) {
-                return; // Don't draw if not revealed
+            // Only draw nodes that are explicitly revealed or are the mystery species.
+            // If it's not in revealedNodes and it's not the mystery species, skip drawing it.
+            if (!isRevealedNode && !isMystery) {
+                return; // Skip drawing unrevealed nodes
             }
 
             // Create a group for each node (circle/rect + text)
