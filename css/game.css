@@ -1,1 +1,195 @@
 
+/* css/game.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #e0f2f7; /* Light blue background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #2c3e50;
+}
+
+header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+header p {
+    font-size: 1.2em;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+#game-controls {
+    text-align: center;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+#game-message {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #2980b9;
+}
+
+#guess-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+}
+
+#species-guess {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    font-size: 1.1em;
+    max-width: 300px; /* Limit input width */
+}
+
+#species-guess:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+#submit-guess-btn {
+    padding: 12px 25px;
+    background-color: #2ecc71; /* Green for guess */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#submit-guess-btn:hover {
+    background-color: #27ae60;
+    transform: translateY(-2px);
+}
+
+#submit-guess-btn:active {
+    transform: translateY(0);
+}
+
+#restart-game-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: #e74c3c; /* Red for restart */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+#restart-game-btn:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+}
+
+#loading-message {
+    font-size: 1.3em;
+    color: #555;
+    text-align: center;
+    padding: 50px;
+}
+
+#error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+}
+
+#tree-display {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    overflow: hidden; /* To contain SVG */
+}
+
+#game-tree-svg {
+    display: block; /* Remove extra space below SVG */
+    border-radius: 8px;
+    /* Basic tree node styling for SVG */
+    /* This will be mostly handled by JS adding classes to SVG elements */
+}
+
+/* SVG Node Styles */
+.node-circle, .node-rect {
+    fill: #ecf0f1; /* Light grey background for nodes */
+    stroke: #7f8c8d; /* Grey border */
+    stroke-width: 1.5;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.node-text {
+    font-family: sans-serif;
+    font-size: 12px;
+    fill: #2c3e50;
+    text-anchor: middle;
+    user-select: none; /* Prevent text selection */
+}
+
+.mystery-node .node-rect, .mystery-node .node-circle {
+    fill: #f1c40f; /* Yellow for mystery node */
+    stroke: #f39c12; /* Darker yellow border */
+}
+
+.mystery-node .node-text {
+    fill: #fff; /* White text for mystery node */
+}
+
+.guessed-node .node-rect, .guessed-node .node-circle {
+    fill: #3498db; /* Blue for guessed nodes */
+    stroke: #2980b9; /* Darker blue border */
+}
+
+.guessed-node .node-text {
+    fill: #fff; /* White text for guessed nodes */
+}
+
+.revealed-node .node-rect, .revealed-node .node-circle {
+    fill: #d2eaf1; /* Slightly more visible for revealed but not guessed/mystery */
+    stroke: #67b0c9;
+}
+
+/* SVG Path (Link) Styles */
+.link-path {
+    fill: none;
+    stroke: #b0c4de; /* Light blue-grey for unrevealed paths */
+    stroke-width: 2;
+    transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
+.revealed-link-path {
+    stroke: #2c3e50; /* Darker for revealed paths */
+    stroke-width: 3;
+}
