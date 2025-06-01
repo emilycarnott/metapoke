@@ -10,7 +10,7 @@ export function renderGameTree(options) {
         revealedEdges,
         mysterySpecies,
         guessedSpeciesHistory,
-        onNodeClick // Callback for node clicks
+        onNodeClick
     } = options;
 
     gameTreeSvg.innerHTML = '';
@@ -20,14 +20,8 @@ export function renderGameTree(options) {
         return;
     }
 
-    const nodesForLayout = new Set();
-    revealedNodes.forEach(id => {
-        let currentNode = findNodeById(id, flatTreeData);
-        while(currentNode) {
-            nodesForLayout.add(currentNode.id);
-            currentNode = findNodeById(currentNode.parentId, flatTreeData);
-        }
-    });
+    // Determine nodes to consider for layout. Only revealed ones (as per the new revelation logic).
+    const nodesForLayout = new Set(revealedNodes); // Directly use revealedNodes for layout
 
     if (nodesForLayout.size === 0) {
         gameTreeSvg.innerHTML = '';
@@ -37,14 +31,21 @@ export function renderGameTree(options) {
 
     const currentLayoutNodes = flatTreeData.filter(node => nodesForLayout.has(node.id));
 
+    // Calculate depth for each node within its *revealed sub-tree context*
     const nodeDepths = new Map();
-    currentLayoutNodes.filter(node => !node.parentId || !nodesForLayout.has(node.parentId)).forEach(root => {
-        let actualRootNode = root;
-        while(actualRootNode.parentId && nodesForLayout.has(actualRootNode.parentId)) {
-            actualRootNode = findNodeById(actualRootNode.parentId, flatTreeData);
-        }
-        calculateDepthForLayout(actualRootNode.id, 0, nodeDepths, currentLayoutNodes, flatTreeData);
-    });
+    // For this new revelation, the LCA is the 'effective root' of the displayed sub-tree.
+    // So, find the LCA (the single family node in revealedNodes) and start depth calculation from there.
+    const lcaNode = currentLayoutNodes.find(node => node.type === 'family' && revealedNodes.has(node.id));
+
+    if (lcaNode) {
+        calculateDepthForLayout(lcaNode.id, 0, nodeDepths, currentLayoutNodes, flatTreeData);
+    } else {
+        // Fallback: If for some reason no LCA is revealed yet (e.g., first guess has identical nodes or just species)
+        // just calculate depth relative to the highest node in currentLayoutNodes
+        currentLayoutNodes.filter(node => !node.parentId || !nodesForLayout.has(node.parentId)).forEach(root => {
+            calculateDepthForLayout(root.id, 0, nodeDepths, currentLayoutNodes, flatTreeData);
+        });
+    }
 
     function calculateDepthForLayout(nodeId, currentDepth, depthMap, availableNodes, flatTree) {
         if (depthMap.has(nodeId)) return;
@@ -108,7 +109,7 @@ export function renderGameTree(options) {
 
     // 1. Draw Paths (Links)
     currentLayoutNodes.forEach(node => {
-        if (node.parentId && nodesForLayout.has(node.parentId)) {
+        if (node.parentId && nodesForLayout.has(node.parentId)) { // Only draw if parent is also in the current layout
             const parentPos = nodePositions.get(node.parentId);
             const childPos = nodePositions.get(node.id);
 
@@ -134,11 +135,10 @@ export function renderGameTree(options) {
             g.classList.add('node-group');
             g.setAttribute('data-node-id', node.id);
 
-            // Add click listener to node group
             g.addEventListener('click', (event) => {
-                event.stopPropagation(); // CRITICAL: Prevents click from bubbling to document immediately
+                event.stopPropagation();
                 if (onNodeClick) {
-                    onNodeClick(node); // Pass the entire node object
+                    onNodeClick(node);
                 }
             });
 
