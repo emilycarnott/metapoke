@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree of Life Editor</title>
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <header>
+        <h1>Tree of Life Editor</h1>
+    </header>
+    <main>
+        <aside class="controls">
+            <h2>Actions</h2>
+            <button id="addFamilyBtn">Add New Family</button>
+            <button id="addSpeciesBtn">Add New Species</button>
+            <hr>
+            <input type="file" id="loadJsonInput" accept=".json" style="display: none;">
+            <button id="loadJsonBtn">Load Tree from JSON</button>
+            <button id="exportJsonBtn">Export Tree as JSON</button>
+            <hr>
+            <div id="nodePropertiesPanel" style="display: none;">
+                <h3>Edit Node</h3>
+                <label for="editName">Name:</label>
+                <input type="text" id="editName"><br>
+                <label for="editDescription">Description:</label>
+                <textarea id="editDescription"></textarea><br>
+                <label for="editImageUrl">Image URL:</label>
+                <input type="text" id="editImageUrl"><br>
+                <input type="checkbox" id="editIsSpecies">
+                <label for="editIsSpecies">Is Species?</label><br>
+                <button id="saveEditBtn">Save Changes</button>
+                <button id="deleteNodeBtn">Delete Node</button>
+            </div>
+        </aside>
+        <section class="tree-container">
+            <h2>Your Tree</h2>
+            <div id="treeVisualization" class="tree-root">
+                <div class="empty-tree-message">Drag and drop nodes here, or add new ones!</div>
+            </div>
+        </section>
+    </main>
+    <script src="js/editor.js"></script>
+</body>
+</html>
