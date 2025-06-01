@@ -86,45 +86,60 @@ function findLowestCommonAncestor(node1Id, node2Id) {
     return lcaId;
 }
 
-// Function to mark nodes and edges as revealed based on a path from guess to LCA
+// Function to mark nodes and edges as revealed based on the guess and mystery species
+// This function now correctly reveals the path from the root to the LCA, and then branches to the guess and mystery.
 function revealPath(guessNodeId) {
-    if (!mysterySpecies || !guessNodeId) return;
-
-    const lcaId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id);
-    if (!lcaId) {
-        // This case should ideally not happen if tree is well-formed (always a root ancestor)
-        console.warn("Could not find LCA for revelation.");
+    if (!mysterySpecies || !guessNodeId) {
+        console.warn("Reveal path called without mystery species or guessNodeId.");
         return;
     }
 
-    const pathGuessToLCA = getPathToRoot(guessNodeId);
-    const pathMysteryToLCA = getPathToRoot(mysterySpecies.id);
-
-    // Filter paths to only include nodes from LCA downwards
-    const startIndexGuess = pathGuessToLCA.indexOf(lcaId);
-    const relevantPathGuess = pathGuessToLCA.slice(startIndexGuess);
-
-    const startIndexMystery = pathMysteryToLCA.indexOf(lcaId);
-    const relevantPathMystery = pathMysteryToLCA.slice(startIndexMystery);
-
-    // Add all nodes in both relevant paths to revealedNodes
-    relevantPathGuess.forEach(id => revealedNodes.add(id));
-    relevantPathMystery.forEach(id => revealedNodes.add(id));
-
-    // Add edges for relevant paths
-    for (let i = 0; i < relevantPathGuess.length - 1; i++) {
-        revealedEdges.add(`${relevantPathGuess[i]}-${relevantPathGuess[i+1]}`);
-    }
-    for (let i = 0; i < relevantPathMystery.length - 1; i++) {
-        revealedEdges.add(`${relevantPathMystery[i]}-${relevantPathMystery[i+1]}`);
+    // 1. Find the Lowest Common Ancestor (LCA)
+    const lcaId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id);
+    if (!lcaId) {
+        console.warn("Could not find LCA for revelation for guess:", guessNodeId);
+        return;
     }
 
-    // Also reveal immediate children of LCA (helps visualize branching)
-    // This part is optional but often improves visual clarity in tree games
-    flatTreeData.filter(node => node.parentId === lcaId).forEach(child => {
-        revealedNodes.add(child.id);
-        revealedEdges.add(`${lcaId}-${child.id}`);
-    });
+    // 2. Mark the path from the GUESSED species up to the LCA
+    let currentNodeId = guessNodeId;
+    while (currentNodeId && currentNodeId !== lcaId) {
+        revealedNodes.add(currentNodeId);
+        const parentId = findNodeById(currentNodeId)?.parentId;
+        if (parentId) {
+            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+        }
+        currentNodeId = parentId;
+    }
+    // Ensure the LCA itself is added if it's the target of the above loop
+    revealedNodes.add(lcaId);
+
+    // 3. Mark the path from the MYSTERY species up to the LCA
+    currentNodeId = mysterySpecies.id;
+    while (currentNodeId && currentNodeId !== lcaId) {
+        revealedNodes.add(currentNodeId);
+        const parentId = findNodeById(currentNodeId)?.parentId;
+        if (parentId) {
+            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+        }
+        currentNodeId = parentId;
+    }
+    // LCA is already added from the previous step
+
+    // 4. Mark the path from the LCA up to the ROOT (common lineage)
+    currentNodeId = lcaId;
+    while (currentNodeId) {
+        revealedNodes.add(currentNodeId);
+        const parentId = findNodeById(currentNodeId)?.parentId;
+        if (parentId) {
+            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+        }
+        currentNodeId = parentId;
+    }
+
+    // Ensure the guessed species and mystery species nodes themselves are definitely in the revealedNodes set
+    revealedNodes.add(guessNodeId);
+    revealedNodes.add(mysterySpecies.id);
 }
 
 
@@ -194,7 +209,10 @@ function startGame() {
     // For now, we'll keep it blank and reveal as guesses come in.
     // However, it's good practice to mark the mystery species as a revealed node,
     // though its name won't be displayed until guessed.
-    revealedNodes.add(mysterySpecies.id); // Add mystery species to revealed nodes (will be displayed as ???)
+    // IMPORTANT: No initial reveal of mysterySpecies.id here.
+    // The tree starts completely blank. Revelation happens only after first guess.
+    // This line was previously present, ensure it's removed:
+    // revealedNodes.add(mysterySpecies.id); // Add mystery species to revealed nodes (will be displayed as ???)
 
     renderGameTree(); // Initial render of the empty/minimal tree
     console.log("Game started. Mystery species:", mysterySpecies.name); // For debugging: REMOVE IN FINAL VERSION
@@ -255,7 +273,22 @@ function processGuess(event) {
 // It will dynamically create/update SVG elements based on 'revealedNodes' and 'revealedEdges'.
 function renderGameTree() {
     gameTreeSvg.innerHTML = ''; // Clear previous SVG content
+    // Determine nodes to consider for layout. Only revealed ones, plus their parents up to root.
+    const nodesForLayout = new Set();
+    revealedNodes.forEach(id => {
+        let currentNode = findNodeById(id);
+        while(currentNode) {
+            nodesForLayout.add(currentNode.id);
+            currentNode = findNodeById(currentNode.parentId);
+        }
+    });
 
+// If no nodes are revealed yet (e.g., at game start), the tree should be totally blank.
+if (nodesForLayout.size === 0) {
+    gameTreeSvg.innerHTML = ''; // Ensure it's explicitly cleared
+    gameTreeSvg.style.height = `0px`; // Collapse SVG height
+    return; // Render nothing if no nodes are revealed
+}
     if (flatTreeData.length === 0) {
         // This case should be handled by loadTreeData error, but as a fallback
         gameTreeSvg.textContent = "Tree data not available.";
