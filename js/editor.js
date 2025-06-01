@@ -1,4 +1,5 @@
 // js/editor.js
+alert("Editor JavaScript is loading!");
 
 // 1. In-memory data structure for our tree nodes (flat list)
 let treeData = [];
