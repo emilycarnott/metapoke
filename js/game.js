@@ -2,15 +2,18 @@
 
 import { convertNestedToFlat, findNodeById, findNodeByName, findLowestCommonAncestor, getPathToRoot } from './modules/data-utils.js';
 import { renderGameTree } from './modules/tree-renderer.js';
-import { showTooltip, hideTooltip } from './modules/tooltip.js'; // Ensure this import is present
+import { showTooltip, hideTooltip } from './modules/tooltip.js';
 
 // --- Global Game State Variables ---
 let flatTreeData = [];
 let mysterySpecies = null;
 let allSpeciesNames = [];
 let guessedSpeciesHistory = [];
-let revealedNodes = new Set();
-let revealedEdges = new Set();
+let revealedNodes = new Set(); // IDs of nodes to display
+let revealedEdges = new Set(); // IDs of edges to display
+
+// Store the single revealed LCA node ID (null if not revealed yet)
+let revealedLCAId = null;
 
 const TREE_DATA_PATH = 'data/tree_of_life.json';
 
@@ -25,50 +28,53 @@ const restartGameBtn = document.getElementById('restart-game-btn');
 const gameTreeSvg = document.getElementById('game-tree-svg');
 const guessForm = document.getElementById('guess-form');
 
-// --- Helper for Revelation ---
+// --- UPDATED: Helper for Revelation (much simpler now) ---
 function revealPath(guessNodeId) {
     if (!mysterySpecies || !guessNodeId) {
         console.warn("Reveal path called without mystery species or guessNodeId.");
         return;
     }
 
-    const lcaId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id, flatTreeData);
-    if (!lcaId) {
+    const currentLCAId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id, flatTreeData);
+    if (!currentLCAId) {
         console.warn("Could not find LCA for revelation for guess:", guessNodeId);
         return;
     }
 
+    // Clear previous revelation if a new LCA is found or if it's the first guess
+    if (revealedLCAId === null || revealedLCAId !== currentLCAId) {
+        revealedNodes.clear();
+        revealedEdges.clear();
+        revealedLCAId = currentLCAId; // Set the new primary LCA
+    }
+
+
+    // 1. Reveal only the LCA node itself
+    revealedNodes.add(revealedLCAId);
+
+    // 2. Reveal the path from LCA down to the guessed species
     let currentNodeId = guessNodeId;
-    while (currentNodeId && currentNodeId !== lcaId) {
+    while (currentNodeId && currentNodeId !== revealedLCAId) { // Traverse up from guess
         revealedNodes.add(currentNodeId);
         const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
+        if (parentId && findNodeById(parentId, flatTreeData).id === revealedLCAId || revealedNodes.has(parentId)) { // Check if parent is LCA or already revealed
             revealedEdges.add(`${parentId}-${currentNodeId}`);
         }
-        currentNodeId = parentId;
+        currentNodeId = parentId; // Move up towards LCA
     }
-    revealedNodes.add(lcaId);
 
+    // 3. Reveal the path from LCA down to the mystery species
     currentNodeId = mysterySpecies.id;
-    while (currentNodeId && currentNodeId !== lcaId) {
+    while (currentNodeId && currentNodeId !== revealedLCAId) { // Traverse up from mystery
         revealedNodes.add(currentNodeId);
         const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
+        if (parentId && findNodeById(parentId, flatTreeData).id === revealedLCAId || revealedNodes.has(parentId)) {
             revealedEdges.add(`${parentId}-${currentNodeId}`);
         }
-        currentNodeId = parentId;
+        currentNodeId = parentId; // Move up towards LCA
     }
 
-    currentNodeId = lcaId;
-    while (currentNodeId) {
-        revealedNodes.add(currentNodeId);
-        const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
-            revealedEdges.add(`${parentId}-${currentNodeId}`);
-        }
-        currentNodeId = parentId;
-    }
-
+    // Ensure guessed and mystery species themselves are marked
     revealedNodes.add(guessNodeId);
     revealedNodes.add(mysterySpecies.id);
 }
@@ -121,7 +127,8 @@ function startGame() {
     guessedSpeciesHistory = [];
     revealedNodes.clear();
     revealedEdges.clear();
-    hideTooltip(); // Hide any active tooltip on game restart
+    revealedLCAId = null; // Reset revealed LCA
+    hideTooltip();
 
     const speciesNodes = flatTreeData.filter(node => node.type === 'species');
     if (speciesNodes.length === 0) {
@@ -194,9 +201,10 @@ function renderCurrentTree() {
         mysterySpecies,
         guessedSpeciesHistory,
         onNodeClick: (node) => {
-            // Only show tooltip if the node is actually visible and has a name/desc
-            if (revealedNodes.has(node.id) || (mysterySpecies && node.id === mysterySpecies.id)) {
-                showTooltip(node); // Pass the full node object
+            if (revealedNodes.has(node.id) || (mysterySpecies && node.id === mysterySpecies.id && guessedSpeciesHistory.includes(node.id))) {
+                showTooltip(node);
+            } else {
+                hideTooltip(); // Hide if clicking an unrevealed part of the tree
             }
         }
     });
@@ -206,16 +214,11 @@ function renderCurrentTree() {
 guessForm.addEventListener('submit', processGuess);
 restartGameBtn.addEventListener('click', startGame);
 
-// Hide tooltip when clicking outside the tree or the popup itself
 document.addEventListener('click', (event) => {
-    // Find the tooltip element dynamically for this check, as it's managed by tooltip.js
     const tooltipElement = document.getElementById('node-info-popup');
 
     if (tooltipElement && !tooltipElement.contains(event.target) && !gameTreeSvg.contains(event.target)) {
-        console.log("Document click: Hiding tooltip.");
         hideTooltip();
-    } else {
-        console.log("Document click: Not hiding tooltip (click was inside or element not found).", event.target);
     }
 });
 
