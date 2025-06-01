@@ -12,9 +12,6 @@ let guessedSpeciesHistory = [];
 let revealedNodes = new Set(); // IDs of nodes to display (CUMULATIVE)
 let revealedEdges = new Set(); // IDs of edges to display (CUMULATIVE)
 
-// REMOVED: No longer need to track revealedLCAId as it's cumulative now.
-// let revealedLCAId = null;
-
 const TREE_DATA_PATH = 'data/tree_of_life.json';
 
 // --- DOM Elements ---
@@ -28,7 +25,7 @@ const restartGameBtn = document.getElementById('restart-game-btn');
 const gameTreeSvg = document.getElementById('game-tree-svg');
 const guessForm = document.getElementById('guess-form');
 
-// --- UPDATED: Helper for Revelation (now cumulative) ---
+// --- UPDATED: Helper for Revelation (now very minimal and direct) ---
 function revealPath(guessNodeId) {
     if (!mysterySpecies || !guessNodeId) {
         console.warn("Reveal path called without mystery species or guessNodeId.");
@@ -41,52 +38,22 @@ function revealPath(guessNodeId) {
         return;
     }
 
-    // REMOVED: No longer clear revealedNodes/Edges on each guess, it's cumulative.
-    // if (revealedLCAId === null || revealedLCAId !== currentLCAId) {
-    //     revealedNodes.clear();
-    //     revealedEdges.clear();
-    //     revealedLCAId = currentLCAId;
-    // }
-
-    // 1. Reveal the path from the GUESSED species up to the LCA (inclusive)
-    let currentNodeId = guessNodeId;
-    while (currentNodeId && currentNodeId !== currentLCAId) {
-        revealedNodes.add(currentNodeId);
-        const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
-            revealedEdges.add(`${parentId}-${currentNodeId}`);
-        }
-        currentNodeId = parentId;
-    }
-    revealedNodes.add(currentLCAId); // Ensure LCA itself is added
-
-    // 2. Reveal the path from the MYSTERY species up to the LCA (inclusive)
-    currentNodeId = mysterySpecies.id;
-    while (currentNodeId && currentNodeId !== currentLCAId) {
-        revealedNodes.add(currentNodeId);
-        const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
-            revealedEdges.add(`${parentId}-${currentNodeId}`);
-        }
-        currentNodeId = parentId;
-    }
-    // LCA is already added by the previous step
-
-    // 3. Reveal the path from the LCA up to the ULTIMATE ROOT of the entire tree
-    // This provides the lineage context as per your example (Animal -> Mammal -> Rodent)
-    currentNodeId = currentLCAId;
-    while (currentNodeId) {
-        revealedNodes.add(currentNodeId);
-        const parentId = findNodeById(currentNodeId, flatTreeData)?.parentId;
-        if (parentId) {
-            revealedEdges.add(`${parentId}-${currentNodeId}`);
-        }
-        currentNodeId = parentId;
-    }
-
-    // Ensure guessed and mystery species themselves are explicitly in revealedNodes (for styling/popups)
+    // Add only the LCA, guessed species, and mystery species to revealedNodes
+    // These sets are cumulative across guesses
+    revealedNodes.add(currentLCAId);
     revealedNodes.add(guessNodeId);
     revealedNodes.add(mysterySpecies.id);
+
+    // Add special direct edges from LCA to guess and LCA to mystery
+    // Format: "direct-LCA_ID-SPECIES_ID"
+    revealedEdges.add(`direct-${currentLCAId}-${guessNodeId}`);
+    revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`);
+
+    // If the guessed species IS the mystery species, ensure it's still linked from its LCA
+    // (LCA might be the species itself if it's a root species, or its direct parent)
+    if (guessNodeId === mysterySpecies.id) {
+        revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`); // Redundant but harmless, ensures link is present
+    }
 }
 
 // --- Game Core Functions ---
@@ -137,7 +104,6 @@ function startGame() {
     guessedSpeciesHistory = [];
     revealedNodes.clear(); // Ensure clear on NEW game start
     revealedEdges.clear(); // Ensure clear on NEW game start
-    // revealedLCAId = null; // Removed as it's no longer used
     hideTooltip();
 
     const speciesNodes = flatTreeData.filter(node => node.type === 'species');
@@ -193,7 +159,7 @@ function processGuess(event) {
         restartGameBtn.style.display = 'block';
         guessForm.style.display = 'none';
 
-        revealPath(mysterySpecies.id);
+        revealPath(mysterySpecies.id); // Final reveal (LCA will be the mystery species itself or its direct parent)
     } else {
         gameMessage.textContent = `"${guessedNode.name}" is not the one. Keep guessing!`;
         revealPath(guessedNode.id);
@@ -211,7 +177,8 @@ function renderCurrentTree() {
         mysterySpecies,
         guessedSpeciesHistory,
         onNodeClick: (node) => {
-            if (revealedNodes.has(node.id) || (mysterySpecies && node.id === mysterySpecies.id && guessedSpeciesHistory.includes(node.id))) {
+            // Popups will only show for nodes that are part of the currently revealed tree
+            if (revealedNodes.has(node.id)) {
                 showTooltip(node);
             } else {
                 hideTooltip(); // Hide if clicking an unrevealed part of the tree
