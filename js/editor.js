@@ -1,23 +1,21 @@
 // js/editor.js
 
 // 1. In-memory data structure for our tree nodes (flat list)
-// This will hold all our nodes with their properties and parent IDs.
 let treeData = [];
 
 // 2. Get references to important DOM elements
 const addFamilyBtn = document.getElementById('addFamilyBtn');
 const addSpeciesBtn = document.getElementById('addSpeciesBtn');
 const treeVisualization = document.getElementById('treeVisualization');
-const nodePropertiesPanel = document.getElementById('nodePropertiesPanel'); // We'll use this later
-const saveEditBtn = document.getElementById('saveEditBtn'); // We'll use this later
-const deleteNodeBtn = document.getElementById('deleteNodeBtn'); // We'll use this later
-const loadJsonInput = document.getElementById('loadJsonInput'); // We'll use this later
-const loadJsonBtn = document.getElementById('loadJsonBtn'); // We'll use this later
-const exportJsonBtn = document.getElementById('exportJsonBtn'); // We'll use this later
+const nodePropertiesPanel = document.getElementById('nodePropertiesPanel');
+const saveEditBtn = document.getElementById('saveEditBtn');
+const deleteNodeBtn = document.getElementById('deleteNodeBtn');
+const loadJsonInput = document.getElementById('loadJsonInput');
+const loadJsonBtn = document.getElementById('loadJsonBtn');
+const exportJsonBtn = document.getElementById('exportJsonBtn');
 
 
 // Function to generate a unique ID for each node
-// Using crypto.randomUUID() is best if supported, otherwise a fallback
 function generateUUID() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         return crypto.randomUUID();
@@ -39,17 +37,17 @@ function renderTree() {
         emptyMessage.remove(); // Remove the placeholder if it exists
     }
 
-
     if (treeData.length === 0) {
         treeVisualization.innerHTML = '<div class="empty-tree-message">No nodes yet. Add some!</div>';
         return;
     }
 
     // Helper to build the nested HTML structure from the flat treeData
-    // We'll pass the root nodes (parentId: null) to this function first
     function buildTreeHTML(nodes, currentParentId, depth = 0) {
         const ul = document.createElement('ul');
-        ul.style.paddingLeft = `${depth * 20}px`; // Indent based on depth
+        // Apply a class for styling nested lists
+        ul.classList.add('tree-list');
+        // ul.style.paddingLeft = `${depth * 20}px`; // Indent based on depth - now handled by CSS
 
         nodes.filter(node => node.parentId === currentParentId)
              .forEach(node => {
@@ -68,10 +66,9 @@ function renderTree() {
                 `;
                 li.appendChild(nodeContent);
 
-                // Add event listener to select/edit node (we'll implement this later)
+                // Add event listener to select/edit node
                 nodeContent.addEventListener('click', (event) => {
-                    // Prevent this click from bubbling up to potentially trigger parent drag
-                    event.stopPropagation();
+                    event.stopPropagation(); // Prevent drag/drop interference
                     selectNode(node.id);
                 });
 
@@ -100,25 +97,36 @@ function renderTree() {
     }
 
     // Start rendering from root nodes (parentId: null)
-    const rootNodesFragment = buildTreeHTML(treeData, null, 0);
-    treeVisualization.appendChild(rootNodesFragment);
+    // Only append root nodes to the main visualization container
+    const rootNodes = treeData.filter(node => node.parentId === null);
+    if (rootNodes.length > 0) {
+        const rootList = buildTreeHTML(treeData, null, 0);
+        treeVisualization.appendChild(rootList);
+    } else {
+        treeVisualization.innerHTML = '<div class="empty-tree-message">No root nodes. Drag existing nodes to the top level, or add new ones!</div>';
+    }
+
+
+    // After rendering, save to local storage
+    saveTreeToLocalStorage();
 }
 
 
-// --- Drag and Drop Functions (Placeholder for now, we'll fill these in later) ---
+// --- Drag and Drop Functions ---
 let draggedNodeId = null;
 
 function handleDragStart(event) {
     draggedNodeId = event.target.dataset.nodeId;
-    event.dataTransfer.setData('text/plain', draggedNodeId); // Required for drag/drop
-    event.target.classList.add('dragging'); // Add a class for styling
+    event.dataTransfer.setData('text/plain', draggedNodeId);
+    event.target.classList.add('dragging');
+    event.stopPropagation(); // Prevent parent drag from also starting
 }
 
 function handleDragOver(event) {
     event.preventDefault(); // Necessary to allow dropping
     const targetNodeElement = event.currentTarget;
     if (targetNodeElement.classList.contains('family-node')) {
-        targetNodeElement.classList.add('drag-over'); // Highlight drop target
+        targetNodeElement.classList.add('drag-over');
     }
 }
 
@@ -134,30 +142,27 @@ function handleDrop(event) {
     const droppedNodeId = event.dataTransfer.getData('text/plain');
     const targetParentId = targetNodeElement.dataset.nodeId; // The ID of the family we're dropping onto
 
-    // console.log(`Dropped node ${droppedNodeId} onto family ${targetParentId}`);
-
-    // --- Core Logic for Updating Parent ID ---
     const droppedNode = treeData.find(node => node.id === droppedNodeId);
     const targetNode = treeData.find(node => node.id === targetParentId);
 
     if (droppedNode && targetNode && targetNode.type === 'family') {
-        // Prevent dropping a node onto itself or its own child
+        // Prevent dropping a node onto itself
         if (droppedNode.id === targetNode.id) {
-            console.warn("Cannot drop node onto itself.");
             return;
         }
-        // Basic check to prevent dropping parent onto its own child (more robust check needed for complex trees)
+
+        // Prevent dropping a parent onto its own child (circular dependency)
         let tempParent = targetNode;
         while(tempParent) {
             if (tempParent.id === droppedNode.id) {
-                console.warn("Cannot drop a parent onto its own child.");
+                console.warn("Cannot drop a node onto its own descendant.");
                 return;
             }
             tempParent = treeData.find(n => n.id === tempParent.parentId);
         }
 
         droppedNode.parentId = targetParentId;
-        renderTree(); // Re-render the tree to reflect the new structure
+        renderTree();
     } else {
         console.warn("Invalid drop target. Can only drop onto a Family node.");
     }
@@ -173,15 +178,11 @@ function handleDragEnd(event) {
 // --- Node Creation Functions ---
 
 function createNode(type) {
-    // Prompt for name and description (simple browser prompts for MVP)
     const name = prompt(`Enter ${type} name:`);
-    if (!name) return; // User cancelled
+    if (!name) return;
 
     const description = prompt(`Enter description for ${name}:`);
-    // description can be empty
-
     const imageUrl = prompt(`Enter image URL for ${name} (optional):`);
-    // imageUrl can be empty
 
     const newNode = {
         id: generateUUID(),
@@ -189,15 +190,15 @@ function createNode(type) {
         description: description ? description.trim() : '',
         imageUrl: imageUrl ? imageUrl.trim() : '',
         type: type,
-        parentId: null // New nodes are added as root initially, drag-and-drop will move them
+        parentId: null // New nodes are added as root initially
     };
 
     treeData.push(newNode);
-    renderTree(); // Re-render the tree to show the new node
+    renderTree(); // Re-render to show the new node and save
 }
 
-// --- Node Editing and Deletion (Placeholders for now) ---
-let selectedNodeId = null; // To keep track of which node is being edited
+// --- Node Editing and Deletion ---
+let selectedNodeId = null;
 
 function selectNode(nodeId) {
     // Deselect previous node if any
@@ -232,6 +233,7 @@ function saveNodeChanges() {
 
     const nodeToEdit = treeData.find(node => node.id === selectedNodeId);
     if (nodeToEdit) {
+        const oldType = nodeToEdit.type; // Store old type to check for changes
         nodeToEdit.name = document.getElementById('editName').value.trim();
         nodeToEdit.description = document.getElementById('editDescription').value.trim();
         nodeToEdit.imageUrl = document.getElementById('editImageUrl').value.trim();
@@ -239,14 +241,13 @@ function saveNodeChanges() {
 
         // If a family node becomes a species, it can no longer have children
         // We need to detach its current children by setting their parentId to null or re-parenting
-        if (nodeToEdit.type === 'species') {
+        if (oldType === 'family' && nodeToEdit.type === 'species') {
             const children = treeData.filter(node => node.parentId === nodeToEdit.id);
             children.forEach(child => child.parentId = null); // Make children root nodes
+            alert(`"${nodeToEdit.name}" was a family and is now a species. Its former children have been moved to the root level.`);
         }
 
-
-        renderTree(); // Re-render to show updated name/type
-        // Hide panel or give feedback
+        renderTree(); // Re-render to show updated name/type and save
         nodePropertiesPanel.style.display = 'none'; // Hide after saving
         selectedNodeId = null; // Deselect
     }
@@ -275,18 +276,162 @@ function deleteSelectedNode() {
     // Filter out all nodes whose IDs are in our set of nodes to delete
     treeData = treeData.filter(node => !nodesToDeleteIds.has(node.id));
 
-    renderTree(); // Re-render the tree
+    renderTree(); // Re-render the tree and save
     nodePropertiesPanel.style.display = 'none'; // Hide panel
     selectedNodeId = null; // Deselect
 }
 
+// --- Local Storage Save/Load ---
 
-// --- Event Listeners ---
+const LOCAL_STORAGE_KEY = 'metapokeTreeData';
 
-addFamilyBtn.addEventListener('click', () => createNode('family'));
-addSpeciesBtn.addEventListener('click', () => createNode('species'));
-saveEditBtn.addEventListener('click', saveNodeChanges);
-deleteNodeBtn.addEventListener('click', deleteSelectedNode);
+function saveTreeToLocalStorage() {
+    try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(treeData));
+        console.log('Tree data saved to local storage.');
+    } catch (e) {
+        console.error('Error saving to local storage:', e);
+        alert('Could not save data to local storage. It might be full or disabled.');
+    }
+}
 
-// Initial render when the page loads
-document.addEventListener('DOMContentLoaded', renderTree); // Ensures DOM is ready
+function loadTreeFromLocalStorage() {
+    try {
+        const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedData) {
+            treeData = JSON.parse(storedData);
+            console.log('Tree data loaded from local storage.');
+            renderTree(); // Re-render after loading
+            return true; // Indicate success
+        }
+    } catch (e) {
+        console.error('Error loading from local storage:', e);
+        alert('Could not load data from local storage. It might be corrupted.');
+    }
+    return false; // Indicate failure or no data
+}
+
+// --- JSON File Export/Import ---
+
+// Converts the flat treeData structure into a nested JSON structure for export
+function convertFlatToNested(flatNodes) {
+    const nodeMap = new Map();
+    const rootNodes = [];
+
+    // Create a map of all nodes by their ID for easy lookup, and initialize children arrays
+    flatNodes.forEach(node => {
+        nodeMap.set(node.id, { ...node, children: [] });
+    });
+
+    // Assign children to their parents
+    flatNodes.forEach(node => {
+        const mappedNode = nodeMap.get(node.id); // Get the mutable node from the map
+
+        if (node.parentId === null) {
+            rootNodes.push(mappedNode); // It's a root node
+        } else {
+            const parent = nodeMap.get(node.parentId);
+            if (parent && parent.type === "family") { // Only families can have children
+                parent.children.push(mappedNode);
+            }
+            // If parent not found or not a family, consider it an orphaned node and potentially log an error
+            // For now, it won't be part of the nested structure unless its parent exists and is a family.
+            // This is okay for export, but in the editor, we ensure parentId points to valid families.
+        }
+    });
+
+    // Ensure children arrays are sorted by some criteria if needed (e.g., name)
+    // For this example, we'll keep the order they were added or found.
+    rootNodes.forEach(node => sortChildrenRecursively(node));
+
+    return rootNodes;
+}
+
+// Helper to sort children recursively for consistent export (optional)
+function sortChildrenRecursively(node) {
+    if (node.children && node.children.length > 0) {
+        node.children.sort((a, b) => a.name.localeCompare(b.name));
+        node.children.forEach(child => sortChildrenRecursively(child));
+    }
+}
+
+
+// Converts a loaded nested JSON structure back into our flat treeData for editing
+function convertNestedToFlat(nestedNodes, parentId = null) {
+    let flatList = [];
+    nestedNodes.forEach(node => {
+        const newNode = {
+            id: node.id,
+            name: node.name,
+            description: node.description || '', // Ensure exists
+            imageUrl: node.imageUrl || '', // Ensure exists
+            type: node.type,
+            parentId: parentId
+        };
+        flatList.push(newNode);
+        if (node.children && node.children.length > 0) {
+            flatList = flatList.concat(convertNestedToFlat(node.children, node.id));
+        }
+    });
+    return flatList;
+}
+
+// Event handler for exporting JSON file
+exportJsonBtn.addEventListener('click', () => {
+    const nestedData = convertFlatToNested(treeData);
+    const jsonString = JSON.stringify(nestedData, null, 2); // Pretty print with 2 spaces
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tree_of_life.json'; // Suggested filename
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // Clean up the URL object
+    alert('Tree exported as tree_of_life.json!');
+});
+
+// Event handler for importing JSON file
+loadJsonBtn.addEventListener('click', () => {
+    loadJsonInput.click(); // Programmatically click the hidden file input
+});
+
+loadJsonInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const loadedNestedData = JSON.parse(e.target.result);
+            // Basic validation: Check if it looks like our tree structure
+            if (!Array.isArray(loadedNestedData) || loadedNestedData.some(node => !node.id || !node.name)) {
+                alert('Invalid JSON file format. Please ensure it contains an array of nodes with "id" and "name" properties.');
+                return;
+            }
+
+            // Convert to flat structure for internal editor use
+            treeData = convertNestedToFlat(loadedNestedData);
+            renderTree(); // Re-render the editor view with the loaded data
+            alert('Tree loaded successfully from JSON file!');
+            // Clear the file input value so that the same file can be loaded again if needed
+            event.target.value = '';
+        } catch (error) {
+            console.error('Error parsing JSON or converting tree:', error);
+            alert('Error loading JSON file. Please ensure it is a valid JSON format.');
+        }
+    };
+    reader.readAsText(file); // Read the file as text
+});
+
+
+// --- Initial Load ---
+
+// Load from local storage when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    if (!loadTreeFromLocalStorage()) {
+        console.log("No data found in local storage or error occurred, starting with empty tree.");
+        renderTree(); // Render an empty tree if no data was loaded
+    }
+});
