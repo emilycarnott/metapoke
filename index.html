@@ -1,1 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metapoke - The Tree of Life Game</title>
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <header>
+        <h1>Metapoke</h1>
+        <p>Guess the Mystery Pokémon!</p>
+    </header>
 
+    <main>
+        <div id="game-controls">
+            <p id="game-message">Start guessing!</p>
+            <form id="guess-form">
+                <input type="text" id="species-guess" list="species-names" placeholder="Enter a Pokémon name..." autocomplete="off" required>
+                <datalist id="species-names"></datalist> <button type="submit" id="submit-guess-btn">Guess</button>
+            </form>
+            <button id="restart-game-btn" style="display: none;">Play Again</button>
+        </div>
+
+        <div id="tree-display">
+            <svg id="game-tree-svg" width="100%" height="600"></svg>
+            <div id="loading-message">Loading tree data...</div>
+            <div id="error-message" style="display: none; color: red;"></div>
+        </div>
+    </main>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
