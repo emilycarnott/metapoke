@@ -161,11 +161,16 @@ main {
     border-color: #007bff;
 }
 
-/* For nested lists */
-.tree-root > ul {
-    padding-left: 0; /* Remove default padding from root UL */
+/* For nested lists - important for indentation */
+/* Remove default padding from the very first UL directly inside treeVisualization */
+.tree-root > .tree-list {
+    padding-left: 0;
+    margin-left: 0;
 }
 
-.tree-node > ul {
+/* Apply padding to all other nested ULs to create indentation */
+.tree-list {
     margin-top: 5px; /* Space between parent and children UL */
+    padding-left: 20px; /* Indent for children lists */
+    list-style: none; /* Ensure no default bullets */
 }
