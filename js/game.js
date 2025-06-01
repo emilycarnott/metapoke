@@ -1,5 +1,9 @@
 // js/game.js
 
+// Import tooltip functionality
+import { showTooltip, hideTooltip } from './modules/tooltip.js'; // NEW LINE
+
+
 let flatTreeData = []; // Stores the flat list of all nodes
 let mysterySpecies = null; // The randomly chosen target species
 let allSpeciesNames = []; // List of all species names for autocomplete
@@ -398,6 +402,15 @@ function renderGameTree() {
             // Add a data attribute for easier debugging/inspection if needed
             g.setAttribute('data-node-id', node.id);
 
+            // NEW: Add click listener to node group
+            g.addEventListener('click', (event) => {
+                // Prevent click from bubbling up to document body to immediately hide the popup
+                event.stopPropagation();
+                // Show the popup using the node data
+                showTooltip(node); // Pass the entire node object
+            });
+            // --- END NEW ---
+
 
             let shape;
             let nodeNameDisplay = node.name; // Default name
@@ -461,6 +474,15 @@ function renderGameTree() {
 
 guessForm.addEventListener('submit', processGuess);
 restartGameBtn.addEventListener('click', startGame);
+
+// NEW: Hide tooltip when clicking anywhere outside the popup or the SVG tree
+document.addEventListener('click', (event) => {
+    // Check if the click was *not* inside the popup itself AND *not* inside the game tree SVG
+    // This prevents the tooltip from closing if you click within the tree or popup.
+    if (!nodeInfoPopup.contains(event.target) && !gameTreeSvg.contains(event.target)) {
+        hideTooltip();
+    }
+});
 
 // --- Initial Game Load ---
 document.addEventListener('DOMContentLoaded', loadTreeData);
