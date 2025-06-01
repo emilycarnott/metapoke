@@ -1,0 +1,1671 @@
+[
+  {
+    "id": "e38077e5-9652-461d-96a5-c90932215a1b",
+    "name": "Pokemon",
+    "description": "Sentient beings that aren't humans, or non-sentient flora.",
+    "imageUrl": "",
+    "type": "family",
+    "parentId": null,
+    "children": [
+      {
+        "id": "648c5afd-db4b-4df4-b0fc-fc83080ad69a",
+        "name": "Animal",
+        "description": "Pokemon that resemble the animals of Earth",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "ea5b2bde-0828-4ff0-9e68-73f89f8aaa00",
+            "name": "Bilateria",
+            "description": "Animal Pokemon who have bodies symmetrical down the middle",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "648c5afd-db4b-4df4-b0fc-fc83080ad69a",
+            "children": [
+              {
+                "id": "e637b56e-459a-4b9b-b942-3ab5086024cd",
+                "name": "Protostome",
+                "description": "Pokemon that resemble invertabrates, where the mouth forms in development before the anus",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "ea5b2bde-0828-4ff0-9e68-73f89f8aaa00",
+                "children": [
+                  {
+                    "id": "4102c9a9-4cfe-4031-8841-eb30522805a9",
+                    "name": "Arthropoda",
+                    "description": "Invertebrate Pokemon that have an exoskeletons",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "e637b56e-459a-4b9b-b942-3ab5086024cd",
+                    "children": [
+                      {
+                        "id": "89593666-3775-4014-bcf0-a797c1964e01",
+                        "name": "Crustacean",
+                        "description": "Pokemon that resemble crustaceans",
+                        "imageUrl": "",
+                        "type": "family",
+                        "parentId": "4102c9a9-4cfe-4031-8841-eb30522805a9",
+                        "children": [
+                          {
+                            "id": "1222d3f1-d532-49ee-9370-42f61792ccd3",
+                            "name": "Kingler",
+                            "description": "",
+                            "imageUrl": "",
+                            "type": "species",
+                            "parentId": "89593666-3775-4014-bcf0-a797c1964e01",
+                            "children": []
+                          },
+                          {
+                            "id": "b86ada2e-72c1-45de-bf58-02462ac1cb27",
+                            "name": "Krabby",
+                            "description": "",
+                            "imageUrl": "",
+                            "type": "species",
+                            "parentId": "89593666-3775-4014-bcf0-a797c1964e01",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": "359347a9-e490-43ec-ae43-83adf9d5c873",
+                        "name": "Insecta",
+                        "description": "Pokemon that resemble insects",
+                        "imageUrl": "",
+                        "type": "family",
+                        "parentId": "4102c9a9-4cfe-4031-8841-eb30522805a9",
+                        "children": [
+                          {
+                            "id": "8a30308a-7bef-4323-bc90-d0d7de733879",
+                            "name": "Hemiptera",
+                            "description": "Pokemon that resemble \"true bugs\" (lots of stuff called [whatever] bug go here)",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "359347a9-e490-43ec-ae43-83adf9d5c873",
+                            "children": [
+                              {
+                                "id": "26b0169d-59fa-4881-8c4a-93b2916ac320",
+                                "name": "Cicadidae",
+                                "description": "Pokemon that resemble cicadas",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "8a30308a-7bef-4323-bc90-d0d7de733879",
+                                "children": [
+                                  {
+                                    "id": "f9472b47-5e62-457a-9f62-36a53c68c78a",
+                                    "name": "Paras",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "26b0169d-59fa-4881-8c4a-93b2916ac320",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "a5d89c61-4443-4835-9514-9cc888af7a7d",
+                                    "name": "Parasect",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "26b0169d-59fa-4881-8c4a-93b2916ac320",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "b980f938-cf24-48d7-adee-5b8d46e81f29",
+                            "name": "Holometabola",
+                            "description": "Pokemon that resemble insects that go through larval, pupal, and adult stages",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "359347a9-e490-43ec-ae43-83adf9d5c873",
+                            "children": [
+                              {
+                                "id": "18cb81d9-ee73-46c4-997e-b58fcb425d91",
+                                "name": "Aculeata",
+                                "description": "Pokemon that resemble ants, bees, and stinging wasps",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "b980f938-cf24-48d7-adee-5b8d46e81f29",
+                                "children": [
+                                  {
+                                    "id": "e6a91c60-b688-4509-a071-a9644e260835",
+                                    "name": "Vespinae",
+                                    "description": "Pokemon that resemble hornets and wasps",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "18cb81d9-ee73-46c4-997e-b58fcb425d91",
+                                    "children": [
+                                      {
+                                        "id": "8d21c775-0043-43e1-a4c1-618630236374",
+                                        "name": "Beedrill",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "e6a91c60-b688-4509-a071-a9644e260835",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "52d20a5c-e61c-4433-b00e-b66723d5624a",
+                                        "name": "Kakuna",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "e6a91c60-b688-4509-a071-a9644e260835",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "d22b8e43-6c81-4e17-a235-baafc3712ff4",
+                                        "name": "Weedle",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "e6a91c60-b688-4509-a071-a9644e260835",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "2ce2ff0d-da6a-489b-b40f-f5e832cb779b",
+                                "name": "Obtectomera",
+                                "description": "Pokemon whose adult forms resemble moths and butterflies",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "b980f938-cf24-48d7-adee-5b8d46e81f29",
+                                "children": [
+                                  {
+                                    "id": "024d8893-c4f4-47eb-8575-273e165b096d",
+                                    "name": "Bombycoidea",
+                                    "description": "Pokemon that resemble moths and their larva",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "2ce2ff0d-da6a-489b-b40f-f5e832cb779b",
+                                    "children": [
+                                      {
+                                        "id": "c6a53a63-23ea-4f22-a6fd-ac3d4dfb0c1f",
+                                        "name": "Venomoth",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "024d8893-c4f4-47eb-8575-273e165b096d",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "566ce508-d6f5-4c1b-8faf-7e337573db3a",
+                                        "name": "Venonat",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "024d8893-c4f4-47eb-8575-273e165b096d",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "b390b8c6-4d01-46b2-b80a-9619d98e1ffe",
+                                    "name": "Nymphalidae",
+                                    "description": "Pokemon that resemble butterflies and their larva",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "2ce2ff0d-da6a-489b-b40f-f5e832cb779b",
+                                    "children": [
+                                      {
+                                        "id": "fe2ee9c5-1da7-4f7b-88f0-31ebb3898ce4",
+                                        "name": "Butterfree",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "b390b8c6-4d01-46b2-b80a-9619d98e1ffe",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "636bb77b-3df3-4916-82c2-a97ea5418ac5",
+                                        "name": "Caterpie",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "b390b8c6-4d01-46b2-b80a-9619d98e1ffe",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "ceda8e83-5cae-4b4c-a6da-df27ef310ef0",
+                                        "name": "Metapod",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "b390b8c6-4d01-46b2-b80a-9619d98e1ffe",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "465a9e4c-d34a-403c-8781-e50f3cebc5b1",
+                    "name": "Mollusca",
+                    "description": "Pokemon that resemble molluscs",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "e637b56e-459a-4b9b-b942-3ab5086024cd",
+                    "children": [
+                      {
+                        "id": "325b0144-be46-434a-8a5d-5a5cbb201c95",
+                        "name": "Bivalvia",
+                        "description": "Pokemon that resemble bivalves (clams, oysters, scallops, etc.)",
+                        "imageUrl": "",
+                        "type": "family",
+                        "parentId": "465a9e4c-d34a-403c-8781-e50f3cebc5b1",
+                        "children": [
+                          {
+                            "id": "397a68f8-4bdd-496e-8722-a3ea5442cd61",
+                            "name": "Cloyster",
+                            "description": "",
+                            "imageUrl": "",
+                            "type": "species",
+                            "parentId": "325b0144-be46-434a-8a5d-5a5cbb201c95",
+                            "children": []
+                          },
+                          {
+                            "id": "c9927d7f-785a-4d4b-9549-74f0dbc07fe2",
+                            "name": "Shellder",
+                            "description": "",
+                            "imageUrl": "",
+                            "type": "species",
+                            "parentId": "325b0144-be46-434a-8a5d-5a5cbb201c95",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "db8e3228-4c97-44d6-b562-c12a977d7feb",
+                "name": "Tetrapod",
+                "description": "Animal vertabrate Pokemon with four limbs",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "ea5b2bde-0828-4ff0-9e68-73f89f8aaa00",
+                "children": [
+                  {
+                    "id": "d8b2cf52-2c1e-4c03-b1f0-286517854f7c",
+                    "name": "Amniote",
+                    "description": "A group containing vertebrate Pokemon who are terrestrial or semiaquatic",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "db8e3228-4c97-44d6-b562-c12a977d7feb",
+                    "children": [
+                      {
+                        "id": "16efde5a-0527-481d-9ee2-b467016067cc",
+                        "name": "Mammalia",
+                        "description": "Pokemon that resemble mammals",
+                        "imageUrl": "",
+                        "type": "family",
+                        "parentId": "d8b2cf52-2c1e-4c03-b1f0-286517854f7c",
+                        "children": [
+                          {
+                            "id": "a1a11691-b489-40f5-8019-59dda173a5bb",
+                            "name": "Carnivora",
+                            "description": "Pokemon that resemble meat-eating mammals",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "ee9a9bbe-5bab-4ecd-a937-41687ab306c1",
+                                "name": "Caniformia",
+                                "description": "Pokemon that resemble dogs and other dog-like mammals",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "a1a11691-b489-40f5-8019-59dda173a5bb",
+                                "children": [
+                                  {
+                                    "id": "09049b1d-2ef9-4644-a4b6-d81d9e12e697",
+                                    "name": "Canis",
+                                    "description": "Pokemon that resemble wolves, dogs, etc.",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "ee9a9bbe-5bab-4ecd-a937-41687ab306c1",
+                                    "children": [
+                                      {
+                                        "id": "d9684dda-cec9-4c08-ad48-4d08fa1c9c95",
+                                        "name": "Arcanine",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "09049b1d-2ef9-4644-a4b6-d81d9e12e697",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "e7b7cfde-ad74-4378-bf1f-67ba9a9b06f2",
+                                        "name": "Growlithe",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "09049b1d-2ef9-4644-a4b6-d81d9e12e697",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "51b1a403-f319-4ca6-a550-f6f3e7b44c54",
+                                    "name": "Pinniped",
+                                    "description": "Pokemon that resemble seals",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "ee9a9bbe-5bab-4ecd-a937-41687ab306c1",
+                                    "children": [
+                                      {
+                                        "id": "d9f6449f-a54c-487e-bd60-4a166716ec08",
+                                        "name": "Dewgong",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "51b1a403-f319-4ca6-a550-f6f3e7b44c54",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "5a46e7ba-9b3b-4bd2-9cda-60f9bbea4e29",
+                                        "name": "Seel",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "51b1a403-f319-4ca6-a550-f6f3e7b44c54",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "233cef97-07a8-4980-bb6a-5fc1db088ac3",
+                                    "name": "Vulpes",
+                                    "description": "Pokemon that resemble foxes",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "ee9a9bbe-5bab-4ecd-a937-41687ab306c1",
+                                    "children": [
+                                      {
+                                        "id": "b30c2be2-dbc6-436e-b16c-986c1dd2605c",
+                                        "name": "Ninetales",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "233cef97-07a8-4980-bb6a-5fc1db088ac3",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "1f931eda-4f19-45fa-9b7a-9f1048b6f787",
+                                        "name": "Vulpix",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "233cef97-07a8-4980-bb6a-5fc1db088ac3",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "6f6806c1-8b2b-403d-8706-2497dc210eb7",
+                                "name": "Felidae",
+                                "description": "Pokemon that resemble cats and other cat-like carnivorous mammals",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "a1a11691-b489-40f5-8019-59dda173a5bb",
+                                "children": [
+                                  {
+                                    "id": "8dd26969-9890-45b5-bc69-1dd8265fe1ec",
+                                    "name": "Meowth",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "6f6806c1-8b2b-403d-8706-2497dc210eb7",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "cdf659fa-bcda-41e1-8789-b5c8d1ad884c",
+                                    "name": "Persian",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "6f6806c1-8b2b-403d-8706-2497dc210eb7",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "f72fab89-4b16-4f2c-9e09-f6dbc52a96fc",
+                            "name": "Chiropetra",
+                            "description": "Pokemon that resemble bats",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "741d6992-390e-471e-b3c0-e5410eb105c7",
+                                "name": "Golbat",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "f72fab89-4b16-4f2c-9e09-f6dbc52a96fc",
+                                "children": []
+                              },
+                              {
+                                "id": "e1e87198-afe2-44b3-b923-2af5d8b24844",
+                                "name": "Zubat",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "f72fab89-4b16-4f2c-9e09-f6dbc52a96fc",
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "id": "63cb2e42-079b-4e47-9513-d5124d6d0904",
+                            "name": "Chlamyphoridae",
+                            "description": "Pokemon that resemble armadillos and other armored mammals",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "1f8cefb3-7bad-49f6-9c28-37d6a8354e3a",
+                                "name": "Sandshrew",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "63cb2e42-079b-4e47-9513-d5124d6d0904",
+                                "children": []
+                              },
+                              {
+                                "id": "25efbd7c-908f-4b84-82aa-eb04f1cca77e",
+                                "name": "Sandslash",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "63cb2e42-079b-4e47-9513-d5124d6d0904",
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "id": "6a1498d3-4444-4351-b280-15e8e9fc268e",
+                            "name": "Eulipotyphla",
+                            "description": "Pokemon that resemble insectivore mammals, such as shrews and moles",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "1448900f-7f88-4bf5-8161-b86806a210da",
+                                "name": "Diglett",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "6a1498d3-4444-4351-b280-15e8e9fc268e",
+                                "children": []
+                              },
+                              {
+                                "id": "38e47d9e-2a9c-496d-9f57-32e84bb37404",
+                                "name": "Dugtrio",
+                                "description": "",
+                                "imageUrl": "",
+                                "type": "species",
+                                "parentId": "6a1498d3-4444-4351-b280-15e8e9fc268e",
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "id": "23c01c5a-9e47-440b-bd2e-bca34d2d4166",
+                            "name": "Glires",
+                            "description": "Pokemon that resemble rodents or rabbits",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "c8a59959-1d70-4e16-9324-bf94d5204087",
+                                "name": "Leporidae",
+                                "description": "Pokemon that resemble rabbits or hares",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "23c01c5a-9e47-440b-bd2e-bca34d2d4166",
+                                "children": [
+                                  {
+                                    "id": "13f9f2c4-fe1f-4b70-a93b-fc6e492813e0",
+                                    "name": "Nidoran F",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "c8a59959-1d70-4e16-9324-bf94d5204087",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "d78f6051-27e3-4cb7-a21f-11f81c7b78c7",
+                                    "name": "Nidoran M",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "c8a59959-1d70-4e16-9324-bf94d5204087",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "664ca631-ceaa-4eb8-a146-d655b69700b4",
+                                    "name": "Nidorina",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "c8a59959-1d70-4e16-9324-bf94d5204087",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "cb9559c7-c4a1-4159-83cd-9970b99edae6",
+                                    "name": "Nidorino",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "c8a59959-1d70-4e16-9324-bf94d5204087",
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "3edd536d-47ac-4105-abb5-b3f0d94b7767",
+                                "name": "Rodentia",
+                                "description": "Pokemon that resemble rodents",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "23c01c5a-9e47-440b-bd2e-bca34d2d4166",
+                                "children": [
+                                  {
+                                    "id": "831736bf-8892-491f-abc6-382b10dc263c",
+                                    "name": "Pikachu",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "3edd536d-47ac-4105-abb5-b3f0d94b7767",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "c7dc0815-569d-4ef3-aff3-094e4cf88ab3",
+                                    "name": "Raichu",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "3edd536d-47ac-4105-abb5-b3f0d94b7767",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "fcdd52a4-216e-4fde-b648-efe23578dcbc",
+                                    "name": "Raticate",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "3edd536d-47ac-4105-abb5-b3f0d94b7767",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "aa8bef17-7574-4116-82d5-75fecb0915d7",
+                                    "name": "Rattata",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "3edd536d-47ac-4105-abb5-b3f0d94b7767",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "30aa2f0f-80ba-4cd8-8488-4d253815f30d",
+                            "name": "Primate",
+                            "description": "Pokemon that resemble primates, which include lemurs, lorisids, and simians",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "1cc09cec-9583-4185-9691-a807c3a2f8e4",
+                                "name": "Simians",
+                                "description": "Pokemon that resembles monkeys and apes",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "30aa2f0f-80ba-4cd8-8488-4d253815f30d",
+                                "children": [
+                                  {
+                                    "id": "b13f1633-f750-4355-b777-21c96f1adee2",
+                                    "name": "Cercopithecidae",
+                                    "description": "Pokemon that resemble Old World monkeys",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "1cc09cec-9583-4185-9691-a807c3a2f8e4",
+                                    "children": [
+                                      {
+                                        "id": "a163c4f7-659c-4fb0-80e9-09b070d46043",
+                                        "name": "Mankey",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "b13f1633-f750-4355-b777-21c96f1adee2",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "b52443a5-4165-4dc0-a3da-4a52a75cf316",
+                                        "name": "Primeape",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "b13f1633-f750-4355-b777-21c96f1adee2",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "552ddbc5-1146-4653-b7c6-7b234fe32805",
+                            "name": "Ungulates",
+                            "description": "Pokemon that resemble animals with hooves",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "16efde5a-0527-481d-9ee2-b467016067cc",
+                            "children": [
+                              {
+                                "id": "c96900b6-ce14-4e63-a7a5-8562feb83dfa",
+                                "name": "Artiodactyls",
+                                "description": "Pokemon that resemble even-toed ungulates, including pigs, deer, cows, hippos, and many more.",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "552ddbc5-1146-4653-b7c6-7b234fe32805",
+                                "children": [
+                                  {
+                                    "id": "e46b8c3d-0329-4e51-a5a6-971326a28f68",
+                                    "name": "Hippopotamidae",
+                                    "description": "Pokemon that resemble hippos",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "c96900b6-ce14-4e63-a7a5-8562feb83dfa",
+                                    "children": [
+                                      {
+                                        "id": "4a0e86ef-3b97-49ce-8cfd-4cb7c2cf3b6e",
+                                        "name": "Slowbro",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "e46b8c3d-0329-4e51-a5a6-971326a28f68",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "ff1b5e06-cbc7-4b46-b15d-04c4e8f41b45",
+                                        "name": "Slowpoke",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "e46b8c3d-0329-4e51-a5a6-971326a28f68",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "f7ff47e0-7c9c-4aed-99f6-14bf3d7f77ac",
+                                "name": "Perissodactyla",
+                                "description": "Pokemon that resemble odd-toed ungulates, including horses, rhinos, and tapirs",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "552ddbc5-1146-4653-b7c6-7b234fe32805",
+                                "children": [
+                                  {
+                                    "id": "09bb8896-520d-4bfe-a4cc-2d88e26e0097",
+                                    "name": "Equidae",
+                                    "description": "Pokemon that resemble horses",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "f7ff47e0-7c9c-4aed-99f6-14bf3d7f77ac",
+                                    "children": [
+                                      {
+                                        "id": "6d3ea322-4f28-470b-ba2c-d5653433f3cf",
+                                        "name": "Pontya",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "09bb8896-520d-4bfe-a4cc-2d88e26e0097",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "0bac1045-4b9a-4f64-bc86-297723b28cbf",
+                                        "name": "Rapidash",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "09bb8896-520d-4bfe-a4cc-2d88e26e0097",
+                                        "children": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "id": "725f5ec6-485a-4ea7-8bdc-a7ce180f3843",
+                        "name": "Sauria",
+                        "description": "Pokemon that resemble reptiles and birds",
+                        "imageUrl": "",
+                        "type": "family",
+                        "parentId": "d8b2cf52-2c1e-4c03-b1f0-286517854f7c",
+                        "children": [
+                          {
+                            "id": "1bc668d3-29a3-40d4-97eb-3056dd598d82",
+                            "name": "Archelosauria",
+                            "description": "Pokemon resembling turtles, birds, or other groups of reptiles",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "725f5ec6-485a-4ea7-8bdc-a7ce180f3843",
+                            "children": [
+                              {
+                                "id": "176075d9-b2f1-4508-b64e-b0a81d120abf",
+                                "name": "Aves",
+                                "description": "Pokemon that resemble birds",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "1bc668d3-29a3-40d4-97eb-3056dd598d82",
+                                "children": [
+                                  {
+                                    "id": "a3f03d91-0abd-4a45-8976-ac6c5b8d7cd9",
+                                    "name": "Anatidae",
+                                    "description": "Pokemon that resemble ducks, swans, and geese",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "176075d9-b2f1-4508-b64e-b0a81d120abf",
+                                    "children": [
+                                      {
+                                        "id": "f0bc81d9-d38e-42d2-b1f0-3a962d6644ca",
+                                        "name": "Farfetch'd",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "a3f03d91-0abd-4a45-8976-ac6c5b8d7cd9",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "10c82a92-3507-49ac-a777-f96853fb6dd1",
+                                        "name": "Golduck",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "a3f03d91-0abd-4a45-8976-ac6c5b8d7cd9",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "e3eed6e0-d39c-422d-b9f5-17bd5fb3f10f",
+                                        "name": "Psyduck",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "a3f03d91-0abd-4a45-8976-ac6c5b8d7cd9",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "7e40dc6b-0432-4687-af38-ccdc5bf4b1bf",
+                                    "name": "Columbidae",
+                                    "description": "Pokemon that resemble doves and pidgeons",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "176075d9-b2f1-4508-b64e-b0a81d120abf",
+                                    "children": [
+                                      {
+                                        "id": "965718f4-8707-4aab-a8d5-ac757fdba4e3",
+                                        "name": "Pidgeot",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "7e40dc6b-0432-4687-af38-ccdc5bf4b1bf",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "b1028ae1-f928-4cf3-9f19-2b86c90b2bb7",
+                                        "name": "Pidgeotto",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "7e40dc6b-0432-4687-af38-ccdc5bf4b1bf",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "5776613f-a2fa-42ab-bbaa-ff0fb187243f",
+                                        "name": "Pidgey",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "7e40dc6b-0432-4687-af38-ccdc5bf4b1bf",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "c79a00bd-3274-48ac-84ca-3b393f8dad89",
+                                    "name": "Palaeognathae",
+                                    "description": "Pokemon that resemble flightless birds",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "176075d9-b2f1-4508-b64e-b0a81d120abf",
+                                    "children": [
+                                      {
+                                        "id": "f815d294-aadb-4323-b5b6-0251b233ae83",
+                                        "name": "Dodrio",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "c79a00bd-3274-48ac-84ca-3b393f8dad89",
+                                        "children": []
+                                      },
+                                      {
+                                        "id": "82ea406f-628c-45ea-ac19-40b2e66d8302",
+                                        "name": "Doduo",
+                                        "description": "",
+                                        "imageUrl": "",
+                                        "type": "species",
+                                        "parentId": "c79a00bd-3274-48ac-84ca-3b393f8dad89",
+                                        "children": []
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "4e83f67c-e6a3-4a29-848d-3472beaedc28",
+                                    "name": "Telluraves",
+                                    "description": "Pokemon that resemble arboreal birds",
+                                    "imageUrl": "",
+                                    "type": "family",
+                                    "parentId": "176075d9-b2f1-4508-b64e-b0a81d120abf",
+                                    "children": [
+                                      {
+                                        "id": "1a1f5d5e-3bea-4549-be7a-453c3134306a",
+                                        "name": "Accipitriformes",
+                                        "description": "Pokemon that resemble birds of prey",
+                                        "imageUrl": "",
+                                        "type": "family",
+                                        "parentId": "4e83f67c-e6a3-4a29-848d-3472beaedc28",
+                                        "children": [
+                                          {
+                                            "id": "48cccb50-9d1f-4de9-aa5b-b85c7908a519",
+                                            "name": "Fearow",
+                                            "description": "",
+                                            "imageUrl": "",
+                                            "type": "species",
+                                            "parentId": "1a1f5d5e-3bea-4549-be7a-453c3134306a",
+                                            "children": []
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "id": "bdf631fb-5be8-47e6-87ab-850427cb0971",
+                                        "name": "Passeriformes",
+                                        "description": "Pokemon that resemble birds with feet that facilitate perching",
+                                        "imageUrl": "",
+                                        "type": "family",
+                                        "parentId": "4e83f67c-e6a3-4a29-848d-3472beaedc28",
+                                        "children": [
+                                          {
+                                            "id": "e019321c-b0ab-4699-89d9-11ae03a2548b",
+                                            "name": "Spearow",
+                                            "description": "",
+                                            "imageUrl": "",
+                                            "type": "species",
+                                            "parentId": "bdf631fb-5be8-47e6-87ab-850427cb0971",
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "5ca77496-a110-4647-b2e9-4113a6f94214",
+                                "name": "Cryptodira",
+                                "description": "Pokemon that resemble tortoises and turtles",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "1bc668d3-29a3-40d4-97eb-3056dd598d82",
+                                "children": [
+                                  {
+                                    "id": "ff20728c-614e-4076-877b-22fc69993921",
+                                    "name": "Blastoise",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "5ca77496-a110-4647-b2e9-4113a6f94214",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "a46307eb-4390-4324-9d69-a03ecf9cec8f",
+                                    "name": "Squirtle",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "5ca77496-a110-4647-b2e9-4113a6f94214",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "367947c0-91b7-4351-881c-cf37dd138231",
+                                    "name": "Wartortle",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "5ca77496-a110-4647-b2e9-4113a6f94214",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "7351755a-636a-4e5f-8faa-ebda44986040",
+                            "name": "Toxicofera",
+                            "description": "Pokemon that resemble scaled reptiles",
+                            "imageUrl": "",
+                            "type": "family",
+                            "parentId": "725f5ec6-485a-4ea7-8bdc-a7ce180f3843",
+                            "children": [
+                              {
+                                "id": "7e624641-eb75-4f5c-b3bf-4b0f2d1fdbc6",
+                                "name": "Charizard",
+                                "description": "Charizard flies around the sky in search of powerful opponents. It breathes fire of such great heat that it melts anything. However, it never turns its fiery breath on any opponent weaker than itself.",
+                                "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/3/38/0006Charizard.png/250px-0006Charizard.png",
+                                "type": "species",
+                                "parentId": "7351755a-636a-4e5f-8faa-ebda44986040",
+                                "children": []
+                              },
+                              {
+                                "id": "e6bf4f03-46f8-4ed5-9ba0-d7075c52ccc9",
+                                "name": "Charmander",
+                                "description": "The flame that burns at the tip of its tail is an indication of its emotions. The flame wavers when Charmander is happy, and blazes when it is enraged.",
+                                "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/2/27/0004Charmander.png/250px-0004Charmander.png",
+                                "type": "species",
+                                "parentId": "7351755a-636a-4e5f-8faa-ebda44986040",
+                                "children": []
+                              },
+                              {
+                                "id": "581674ae-681a-4bf5-921d-2ea26ec0b7c0",
+                                "name": "Charmeleon",
+                                "description": "It is very hotheaded by nature, so it constantly seeks opponents. It calms down only when it wins.",
+                                "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/0/05/0005Charmeleon.png/250px-0005Charmeleon.png",
+                                "type": "species",
+                                "parentId": "7351755a-636a-4e5f-8faa-ebda44986040",
+                                "children": []
+                              },
+                              {
+                                "id": "13eea7bb-d449-4d3f-a44b-6f89d946cbdb",
+                                "name": "Colubroidea",
+                                "description": "Pokemon that resemble snakes",
+                                "imageUrl": "",
+                                "type": "family",
+                                "parentId": "7351755a-636a-4e5f-8faa-ebda44986040",
+                                "children": [
+                                  {
+                                    "id": "e2bce00f-d381-41f8-a7f7-de96efe1246f",
+                                    "name": "Arbok",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "13eea7bb-d449-4d3f-a44b-6f89d946cbdb",
+                                    "children": []
+                                  },
+                                  {
+                                    "id": "d0e6c9f8-6520-4520-a42e-aff6f6060786",
+                                    "name": "Ekans",
+                                    "description": "",
+                                    "imageUrl": "",
+                                    "type": "species",
+                                    "parentId": "13eea7bb-d449-4d3f-a44b-6f89d946cbdb",
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                    "name": "Anura",
+                    "description": "Pokemon that resemble frogs",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "db8e3228-4c97-44d6-b562-c12a977d7feb",
+                    "children": [
+                      {
+                        "id": "981a5fca-dec9-4cfb-a819-4dc6e571c6a8",
+                        "name": "Bulbasaur",
+                        "description": "",
+                        "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/f/fb/0001Bulbasaur.png/600px-0001Bulbasaur.png",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      },
+                      {
+                        "id": "a8838b10-1f23-4c65-81ae-d3b22090bddf",
+                        "name": "Ivysaur",
+                        "description": "There is a plant bulb on its back. When it absorbs nutrients, the bulb is said to blossom into a large flower.",
+                        "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/8/81/0002Ivysaur.png/600px-0002Ivysaur.png",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      },
+                      {
+                        "id": "ad5f9ca5-ffb1-460c-ae35-2bff0f4d7cfb",
+                        "name": "Poliwag",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      },
+                      {
+                        "id": "84f56ede-0443-4005-9867-f348c5f4dc12",
+                        "name": "Poliwhirl",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      },
+                      {
+                        "id": "02eb72f4-7a9e-446f-aed7-2932d51cbd46",
+                        "name": "Poliwrath",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      },
+                      {
+                        "id": "7df20a2d-0bdd-41e0-91a6-4a4273aa7732",
+                        "name": "Venusaur",
+                        "description": "There is a large flower on Venusaur's back. The flower is said to take on vivid colors if it gets plenty of nutrition and sunlight. The flower's aroma soothes the emotions of people.",
+                        "imageUrl": "https://archives.bulbagarden.net/media/upload/thumb/6/6b/0003Venusaur.png/600px-0003Venusaur.png",
+                        "type": "species",
+                        "parentId": "49a161da-0187-4e85-918f-17a46cdf03d2",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "a4a61cc4-84eb-4e88-b4de-82be7d7c2638",
+            "name": "Cnidaria",
+            "description": "Pokemon that resemble jellyfish, anemones, and other marine invertebrates",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "648c5afd-db4b-4df4-b0fc-fc83080ad69a",
+            "children": [
+              {
+                "id": "79b5cf3a-44e4-4501-a603-b1ff8cba0cc2",
+                "name": "Tentacool",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "a4a61cc4-84eb-4e88-b4de-82be7d7c2638",
+                "children": []
+              },
+              {
+                "id": "cbf5759d-9c1b-4a24-8190-7ffe73654bcd",
+                "name": "Tentacruel",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "a4a61cc4-84eb-4e88-b4de-82be7d7c2638",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "36a5dc6e-9bdc-42eb-9f80-165d0b55def7",
+        "name": "Constructs",
+        "description": "Pokemon that resemble man-made objects",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "473ab5c5-339a-4994-87bd-2867e5d6a61a",
+            "name": "Electronics",
+            "description": "Pokemon that resemble electronic man-made products",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "36a5dc6e-9bdc-42eb-9f80-165d0b55def7",
+            "children": [
+              {
+                "id": "159ea57f-1d72-485c-be8d-485328465ef5",
+                "name": "Electrode",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "473ab5c5-339a-4994-87bd-2867e5d6a61a",
+                "children": []
+              },
+              {
+                "id": "433a516d-b984-4511-8d22-cd952bc7ddae",
+                "name": "Voltorb",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "473ab5c5-339a-4994-87bd-2867e5d6a61a",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "1f25fbcd-1ea9-4412-8995-728bc17f2983",
+            "name": "Metals",
+            "description": "Pokemon resembling artificial objects made out of metal",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "36a5dc6e-9bdc-42eb-9f80-165d0b55def7",
+            "children": [
+              {
+                "id": "e29d78a3-cb6c-4240-a76e-f985b59f0051",
+                "name": "Magnemite",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1f25fbcd-1ea9-4412-8995-728bc17f2983",
+                "children": []
+              },
+              {
+                "id": "ebbabea9-629b-4855-8260-cd94dd9ed974",
+                "name": "Magneton",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1f25fbcd-1ea9-4412-8995-728bc17f2983",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "6ac59b0e-feed-4dc6-aeb5-6abc9945a7d6",
+            "name": "Oozes",
+            "description": "Pokemon that resemble sludges and oozes",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "36a5dc6e-9bdc-42eb-9f80-165d0b55def7",
+            "children": [
+              {
+                "id": "09def078-aae9-4d10-a908-dbea683c01e3",
+                "name": "Grimer",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "6ac59b0e-feed-4dc6-aeb5-6abc9945a7d6",
+                "children": []
+              },
+              {
+                "id": "fa25a912-1b3e-4db2-8234-d993551f70f7",
+                "name": "Muk",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "6ac59b0e-feed-4dc6-aeb5-6abc9945a7d6",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "96d8e29e-02f5-4d97-87e7-9cd768ede9e7",
+        "name": "Humanlike",
+        "description": "Pokemon that resemble types of humans",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "68a0cc03-cbcb-4bc6-8e4f-5811b2dde025",
+            "name": "Psychics",
+            "description": "Pokemon that resemble humans with ESP",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "96d8e29e-02f5-4d97-87e7-9cd768ede9e7",
+            "children": [
+              {
+                "id": "fd10547f-6612-4b50-9970-57bb0e4b178a",
+                "name": "Abra",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "68a0cc03-cbcb-4bc6-8e4f-5811b2dde025",
+                "children": []
+              },
+              {
+                "id": "fa396269-47da-4681-a6bc-74d4530f70c8",
+                "name": "Alakazam",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "68a0cc03-cbcb-4bc6-8e4f-5811b2dde025",
+                "children": []
+              },
+              {
+                "id": "fb7067ac-2ff8-4919-8731-a5d6ca749d32",
+                "name": "Kadabra",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "68a0cc03-cbcb-4bc6-8e4f-5811b2dde025",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "bf1ff4a0-f70e-423b-82c5-32debf3c0372",
+            "name": "Strongmen",
+            "description": "Pokemon that resemble bodybuilders",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "96d8e29e-02f5-4d97-87e7-9cd768ede9e7",
+            "children": [
+              {
+                "id": "c3540686-e3c2-456b-af5a-0ae7bed3bf28",
+                "name": "Machamp",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bf1ff4a0-f70e-423b-82c5-32debf3c0372",
+                "children": []
+              },
+              {
+                "id": "a8395438-52f3-446b-b652-32b71856d503",
+                "name": "Machoke",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bf1ff4a0-f70e-423b-82c5-32debf3c0372",
+                "children": []
+              },
+              {
+                "id": "617aba90-98d3-412c-97f7-6d7064c8f14e",
+                "name": "Machop",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bf1ff4a0-f70e-423b-82c5-32debf3c0372",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "29ec180f-722c-4a3d-90e2-7e967a7ff48f",
+        "name": "Mineral",
+        "description": "Pokemon resembling naturally occuring inanimate materials",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "1dc93643-17c3-4760-9bb2-122428403def",
+            "name": "Rocks",
+            "description": "Pokemon that appear to be made of rocks",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "29ec180f-722c-4a3d-90e2-7e967a7ff48f",
+            "children": [
+              {
+                "id": "b4c6049a-2923-4bb5-9bd5-8db6f242af31",
+                "name": "Geodude",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1dc93643-17c3-4760-9bb2-122428403def",
+                "children": []
+              },
+              {
+                "id": "6f9cfc55-6b63-482e-9ca6-fc6593ef05e1",
+                "name": "Golem",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1dc93643-17c3-4760-9bb2-122428403def",
+                "children": []
+              },
+              {
+                "id": "a5ebea43-51cb-4f40-bc8b-99bd6c6745df",
+                "name": "Graveler",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1dc93643-17c3-4760-9bb2-122428403def",
+                "children": []
+              },
+              {
+                "id": "4f79085e-497d-4d46-a83d-cf0d3d551bf3",
+                "name": "Onix",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "1dc93643-17c3-4760-9bb2-122428403def",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "a055c0ea-244c-4d49-96d6-0c06d8000d82",
+        "name": "Mythica",
+        "description": "Pokemon that resemble beings from folklore, mythology, cryptozoology, etc.",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "b666df32-78f0-4850-a507-b13f8a25818e",
+            "name": "Fairies",
+            "description": "Pokemon that resemble pixies, sprites, or fairies from folklore",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "a055c0ea-244c-4d49-96d6-0c06d8000d82",
+            "children": [
+              {
+                "id": "1e41b0a8-ac11-4fa5-9cfe-b6960f746180",
+                "name": "Clefable",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "b666df32-78f0-4850-a507-b13f8a25818e",
+                "children": []
+              },
+              {
+                "id": "2f876918-abb9-43d3-932d-484531a646f6",
+                "name": "Clefairy",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "b666df32-78f0-4850-a507-b13f8a25818e",
+                "children": []
+              },
+              {
+                "id": "5d0fe998-9207-4e1b-adc9-c9153fea55eb",
+                "name": "Jigglypuff",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "b666df32-78f0-4850-a507-b13f8a25818e",
+                "children": []
+              },
+              {
+                "id": "3e238f81-dd05-45fc-8a44-72ee48416653",
+                "name": "Wigglytuff",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "b666df32-78f0-4850-a507-b13f8a25818e",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "8e6dd859-90ae-4061-9551-b51cad72b5bc",
+            "name": "Kaijuu",
+            "description": "Pokemon that resemble kaijuu (giant monsters from Japanese sci-fi)",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "a055c0ea-244c-4d49-96d6-0c06d8000d82",
+            "children": [
+              {
+                "id": "93a1ed8a-7f5c-4246-80df-f03c2013763f",
+                "name": "Nidoking",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "8e6dd859-90ae-4061-9551-b51cad72b5bc",
+                "children": []
+              },
+              {
+                "id": "87e7f50e-9d31-4a5a-9dfe-c10e6d7f9d18",
+                "name": "Nidoqueen",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "8e6dd859-90ae-4061-9551-b51cad72b5bc",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "bb2a4368-c69b-4fa7-95c9-882c14f94e29",
+            "name": "Spirits",
+            "description": "Pokemon that resemble spirits, ghosts, and other entities that persist after death",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "a055c0ea-244c-4d49-96d6-0c06d8000d82",
+            "children": [
+              {
+                "id": "d1a6ecd2-7ef6-40b3-8226-201b23d81838",
+                "name": "Gastly",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bb2a4368-c69b-4fa7-95c9-882c14f94e29",
+                "children": []
+              },
+              {
+                "id": "dffee8f1-043d-4fac-b8f3-4f1a62233663",
+                "name": "Gengar",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bb2a4368-c69b-4fa7-95c9-882c14f94e29",
+                "children": []
+              },
+              {
+                "id": "eae405e7-1f14-4f13-a111-1e30c8933ec9",
+                "name": "Haunter",
+                "description": "",
+                "imageUrl": "",
+                "type": "species",
+                "parentId": "bb2a4368-c69b-4fa7-95c9-882c14f94e29",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "36dd9b87-b957-4224-914d-7d2ce3120f11",
+            "name": "Yokai",
+            "description": "Pokemon that resemble creatures from Japanese folklore",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "a055c0ea-244c-4d49-96d6-0c06d8000d82",
+            "children": [
+              {
+                "id": "03736c10-acf1-4d7d-b217-fec70a4cf748",
+                "name": "Baku",
+                "description": "Pokemon that resemble baku, a dream-eating animal in Japanese folklore",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "36dd9b87-b957-4224-914d-7d2ce3120f11",
+                "children": [
+                  {
+                    "id": "b0a6a179-6466-4828-9755-ba3884c93d0b",
+                    "name": "Drowzee",
+                    "description": "",
+                    "imageUrl": "",
+                    "type": "species",
+                    "parentId": "03736c10-acf1-4d7d-b217-fec70a4cf748",
+                    "children": []
+                  },
+                  {
+                    "id": "4f3233d6-0a22-4a80-93be-e2548f4acafd",
+                    "name": "Hypno",
+                    "description": "",
+                    "imageUrl": "",
+                    "type": "species",
+                    "parentId": "03736c10-acf1-4d7d-b217-fec70a4cf748",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b6b45f50-55cd-4920-a44a-22e15474a7bf",
+        "name": "Plant",
+        "description": "Pokemon that resemble plants",
+        "imageUrl": "",
+        "type": "family",
+        "parentId": "e38077e5-9652-461d-96a5-c90932215a1b",
+        "children": [
+          {
+            "id": "8f5359a3-5770-4e5d-873a-2a071ac1f501",
+            "name": "Flowering Plants",
+            "description": "Pokemon that resemble flowering plants",
+            "imageUrl": "",
+            "type": "family",
+            "parentId": "b6b45f50-55cd-4920-a44a-22e15474a7bf",
+            "children": [
+              {
+                "id": "1117b691-2570-4fcf-9ef0-38eed8fa0986",
+                "name": "Brassicales",
+                "description": "Pokemon that resemble plants that produce mustard oil. These include some fruits and vegetables.",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "8f5359a3-5770-4e5d-873a-2a071ac1f501",
+                "children": [
+                  {
+                    "id": "c21ac83d-db29-4164-bb9d-414dfab1000e",
+                    "name": "Oddish",
+                    "description": "",
+                    "imageUrl": "",
+                    "type": "species",
+                    "parentId": "1117b691-2570-4fcf-9ef0-38eed8fa0986",
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "id": "04268a0c-fe98-497f-92ce-109f94c08b41",
+                "name": "Caryophyllales",
+                "description": "Pokemon that resemble plants in a family including cacti, some vegetables, and carnivorous plants",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "8f5359a3-5770-4e5d-873a-2a071ac1f501",
+                "children": [
+                  {
+                    "id": "e3baa5ad-f090-4e09-86de-8470251c317f",
+                    "name": "Nepenthes",
+                    "description": "Pokemon that resemble pitcher plants",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "04268a0c-fe98-497f-92ce-109f94c08b41",
+                    "children": [
+                      {
+                        "id": "047aa1ed-ad71-437e-8c9d-c4e682f9ba8b",
+                        "name": "Bellsprout",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "e3baa5ad-f090-4e09-86de-8470251c317f",
+                        "children": []
+                      },
+                      {
+                        "id": "46d55ec2-889e-41c6-b420-ebcad20d6c4d",
+                        "name": "Victreebell",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "e3baa5ad-f090-4e09-86de-8470251c317f",
+                        "children": []
+                      },
+                      {
+                        "id": "d0297f54-d73c-4e01-9871-f562e18d6ba4",
+                        "name": "Weepinbell",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "e3baa5ad-f090-4e09-86de-8470251c317f",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "b367d00e-a5a9-4e02-8b1d-e14c70c85abd",
+                "name": "Malpighiales",
+                "description": "Pokemon that resemble one of a large group of flowering plants",
+                "imageUrl": "",
+                "type": "family",
+                "parentId": "8f5359a3-5770-4e5d-873a-2a071ac1f501",
+                "children": [
+                  {
+                    "id": "35da6a86-d049-4bcf-ba38-9c7fb189ab10",
+                    "name": "Rafflesiaceae",
+                    "description": "Pokemon that resemble parasitic plants",
+                    "imageUrl": "",
+                    "type": "family",
+                    "parentId": "b367d00e-a5a9-4e02-8b1d-e14c70c85abd",
+                    "children": [
+                      {
+                        "id": "c6be57e3-cb17-40c7-a9af-26e1b891c5b2",
+                        "name": "Gloom",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "35da6a86-d049-4bcf-ba38-9c7fb189ab10",
+                        "children": []
+                      },
+                      {
+                        "id": "3a7f907e-a3f7-441d-82a6-e4a08300b02a",
+                        "name": "Vileplume",
+                        "description": "",
+                        "imageUrl": "",
+                        "type": "species",
+                        "parentId": "35da6a86-d049-4bcf-ba38-9c7fb189ab10",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
