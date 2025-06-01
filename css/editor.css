@@ -1,1 +1,171 @@
+/* css/editor.css */
 
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    display: flex;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    grid-column: 1 / -1; /* Spans across all columns in a grid layout */
+}
+
+main {
+    display: flex;
+    flex-grow: 1;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.controls {
+    flex: 0 0 280px; /* Fixed width sidebar */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    align-self: flex-start; /* Stick to top */
+}
+
+.controls button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+}
+
+.controls hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+#nodePropertiesPanel label,
+#nodePropertiesPanel input,
+#nodePropertiesPanel textarea {
+    display: block;
+    width: calc(100% - 10px);
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#nodePropertiesPanel textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#nodePropertiesPanel button {
+    margin-top: 10px;
+    background-color: #28a745; /* Green for save */
+}
+
+#deleteNodeBtn {
+    background-color: #dc3545; /* Red for delete */
+}
+
+#deleteNodeBtn:hover {
+    background-color: #c82333;
+}
+
+
+.tree-container {
+    flex-grow: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: auto; /* For larger trees */
+}
+
+.tree-root {
+    min-height: 100px; /* Ensure there's a visible drop area even when empty */
+    border: 1px dashed #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.empty-tree-message {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+}
+
+/* Tree Node Styling */
+.tree-node {
+    list-style-type: none; /* Remove bullet points */
+    margin: 5px 0;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: grab; /* Indicate draggable */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    position: relative; /* For selection highlight */
+}
+
+.tree-node .node-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Allows content to fill space */
+}
+
+.tree-node.selected {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    background-color: #e6f7ff;
+}
+
+.node-type-icon {
+    font-size: 1.2em;
+    margin-right: 8px;
+}
+
+.node-name {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+
+/* Drag and Drop Visuals */
+.tree-node.dragging {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: #007bff;
+}
+
+.family-node.drag-over {
+    background-color: #dbeaff; /* Highlight potential drop target */
+    border-color: #007bff;
+}
+
+/* For nested lists */
+.tree-root > ul {
+    padding-left: 0; /* Remove default padding from root UL */
+}
+
+.tree-node > ul {
+    margin-top: 5px; /* Space between parent and children UL */
+}
