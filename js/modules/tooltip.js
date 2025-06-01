@@ -1,53 +1,64 @@
 // js/modules/tooltip.js
 
-// Global variable to hold the tooltip DOM element
 let tooltipElement;
+let popupNameElement;
+let popupDescriptionElement;
+let popupImageElement;
+let popupCloseButtonElement;
 
-// This function creates the tooltip div if it doesn't already exist
-function createTooltipElement() {
+// This function ensures the tooltip DOM elements are found/created and initialized
+function initializeTooltipElements() {
+    if (tooltipElement) {
+        return true; // Already initialized
+    }
+
+    tooltipElement = document.getElementById('node-info-popup');
     if (!tooltipElement) {
-        tooltipElement = document.createElement('div');
-        tooltipElement.id = 'node-info-popup'; // Use the ID from our HTML plan
-        tooltipElement.classList.add('node-info-popup');
-        // Add other inner HTML elements now, or let showTooltip populate them later
-        tooltipElement.innerHTML = `
-            <h3 id="popup-name"></h3>
-            <p id="popup-description"></p>
-            <img id="popup-image" src="" alt="Node Image" style="display: none;">
-            <button id="popup-close-btn">Close</button>
-        `;
-        document.body.appendChild(tooltipElement);
-
-        // Add the close button listener here once the button is created
-        document.getElementById('popup-close-btn').addEventListener('click', hideTooltip);
+        console.error("Error: #node-info-popup element not found in HTML. Did you add it to index.html?");
+        return false;
     }
+
+    popupNameElement = document.getElementById('popup-name');
+    popupDescriptionElement = document.getElementById('popup-description');
+    popupImageElement = document.getElementById('popup-image');
+    popupCloseButtonElement = document.getElementById('popup-close-btn');
+
+    if (!popupNameElement || !popupDescriptionElement || !popupImageElement || !popupCloseButtonElement) {
+        console.error("Error: Missing sub-elements within #node-info-popup. Check IDs in index.html (popup-name, popup-description, popup-image, popup-close-btn).");
+        return false;
+    }
+
+    // Add the close button listener here once the button is found
+    popupCloseButtonElement.addEventListener('click', hideTooltip);
+    console.log("Tooltip elements initialized and close button listener attached.");
+    return true;
 }
 
-// Function to show the tooltip with node information
 export function showTooltip(nodeData) {
-    // Ensure the tooltip element exists
-    createTooltipElement();
-
-    document.getElementById('popup-name').textContent = nodeData.name;
-    document.getElementById('popup-description').textContent = nodeData.description || 'No description available.';
-
-    const popupImage = document.getElementById('popup-image');
-    if (nodeData.imageUrl) {
-        popupImage.src = nodeData.imageUrl;
-        popupImage.style.display = 'block'; // Show the image
-    } else {
-        popupImage.src = ''; // Clear image source
-        popupImage.style.display = 'none'; // Hide the image element
+    if (!initializeTooltipElements()) {
+        return; // Exit if initialization failed
     }
 
-    tooltipElement.style.display = 'block'; // Make the tooltip visible
-    document.body.classList.add('popup-active'); // Add class to body for potential overflow hidden
+    popupNameElement.textContent = nodeData.name;
+    popupDescriptionElement.textContent = nodeData.description || 'No description available.'; // Handles empty/null/undefined descriptions
+
+    if (nodeData.imageUrl) {
+        popupImageElement.src = nodeData.imageUrl;
+        popupImageElement.style.display = 'block';
+    } else {
+        popupImageElement.src = '';
+        popupImageElement.style.display = 'none';
+    }
+
+    tooltipElement.style.display = 'block';
+    document.body.classList.add('popup-active');
+    console.log("Tooltip displayed for node:", nodeData.name, "Description:", nodeData.description);
 }
 
-// Function to hide the tooltip
 export function hideTooltip() {
     if (tooltipElement) {
         tooltipElement.style.display = 'none';
     }
-    document.body.classList.remove('popup-active'); // Remove class from body
+    document.body.classList.remove('popup-active');
+    console.log("Tooltip hidden.");
 }
