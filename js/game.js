@@ -36,12 +36,12 @@ function convertNestedToFlat(nestedNodes, parentId = null) {
         };
         flatList.push(newNode);
 
-        if (node.type === 'species') {
-            allSpeciesNames.push(node.name.toLowerCase()); // Collect species names for autocomplete
+        if (newNode.type === 'species') { // Use newNode as it has all properties
+            allSpeciesNames.push(newNode.name.toLowerCase()); // Collect species names for autocomplete
         }
 
         if (node.children && node.children.length > 0) {
-            flatList = flatList.concat(convertNestedToFlat(node.children, node.id));
+            flatList = flatList.concat(convertNestedToFlat(node.children, newNode.id));
         }
     });
     return flatList;
@@ -86,7 +86,7 @@ function findLowestCommonAncestor(node1Id, node2Id) {
     return lcaId;
 }
 
-// Function to mark nodes and edges as revealed based on the guess and mystery species
+// --- NEW/UPDATED: Function to mark nodes and edges as revealed based on the guess and mystery species ---
 // This function now correctly reveals the path from the root to the LCA, and then branches to the guess and mystery.
 function revealPath(guessNodeId) {
     if (!mysterySpecies || !guessNodeId) {
@@ -94,45 +94,43 @@ function revealPath(guessNodeId) {
         return;
     }
 
-    // 1. Find the Lowest Common Ancestor (LCA)
     const lcaId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id);
     if (!lcaId) {
         console.warn("Could not find LCA for revelation for guess:", guessNodeId);
         return;
     }
 
-    // 2. Mark the path from the GUESSED species up to the LCA
+    // 1. Reveal path from the GUESSED species up to the LCA
     let currentNodeId = guessNodeId;
     while (currentNodeId && currentNodeId !== lcaId) {
         revealedNodes.add(currentNodeId);
         const parentId = findNodeById(currentNodeId)?.parentId;
         if (parentId) {
-            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+            revealedEdges.add(`${parentId}-${currentNodeId}`);
         }
         currentNodeId = parentId;
     }
-    // Ensure the LCA itself is added if it's the target of the above loop
-    revealedNodes.add(lcaId);
+    revealedNodes.add(lcaId); // Ensure the LCA itself is added
 
-    // 3. Mark the path from the MYSTERY species up to the LCA
+    // 2. Reveal path from the MYSTERY species up to the LCA
     currentNodeId = mysterySpecies.id;
     while (currentNodeId && currentNodeId !== lcaId) {
         revealedNodes.add(currentNodeId);
         const parentId = findNodeById(currentNodeId)?.parentId;
         if (parentId) {
-            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+            revealedEdges.add(`${parentId}-${currentNodeId}`);
         }
         currentNodeId = parentId;
     }
     // LCA is already added from the previous step
 
-    // 4. Mark the path from the LCA up to the ROOT (common lineage)
+    // 3. Reveal path from the LCA up to the ROOT (common lineage)
     currentNodeId = lcaId;
     while (currentNodeId) {
         revealedNodes.add(currentNodeId);
         const parentId = findNodeById(currentNodeId)?.parentId;
         if (parentId) {
-            revealedEdges.add(`<span class="math-inline">\{parentId\}\-</span>{currentNodeId}`);
+            revealedEdges.add(`${parentId}-${currentNodeId}`);
         }
         currentNodeId = parentId;
     }
@@ -158,9 +156,13 @@ async function loadTreeData() {
             throw new Error('Loaded JSON is empty or not an array.');
         }
 
+        // Reset allSpeciesNames before converting new data
+        allSpeciesNames = [];
         flatTreeData = convertNestedToFlat(nestedData);
 
         // Populate datalist for autocomplete
+        // Clear previous options first if reloading data
+        speciesNamesDatalist.innerHTML = '';
         allSpeciesNames.forEach(name => {
             const option = document.createElement('option');
             option.value = name;
@@ -181,11 +183,11 @@ async function loadTreeData() {
     }
 }
 
-// Starts a new game round
+// --- UPDATED: Starts a new game round for a truly blank start ---
 function startGame() {
     guessedSpeciesHistory = [];
-    revealedNodes.clear();
-    revealedEdges.clear();
+    revealedNodes.clear(); // Ensure completely blank slate
+    revealedEdges.clear(); // Ensure completely blank slate
 
     const speciesNodes = flatTreeData.filter(node => node.type === 'species');
     if (speciesNodes.length === 0) {
@@ -205,17 +207,11 @@ function startGame() {
     restartGameBtn.style.display = 'none';
     guessForm.style.display = 'flex';
 
-    // Initial reveal: show the very first node (root) if needed, or simply start blank.
-    // For now, we'll keep it blank and reveal as guesses come in.
-    // However, it's good practice to mark the mystery species as a revealed node,
-    // though its name won't be displayed until guessed.
     // IMPORTANT: No initial reveal of mysterySpecies.id here.
     // The tree starts completely blank. Revelation happens only after first guess.
-    // This line was previously present, ensure it's removed:
-    // revealedNodes.add(mysterySpecies.id); // Add mystery species to revealed nodes (will be displayed as ???)
 
-    renderGameTree(); // Initial render of the empty/minimal tree
-    console.log("Game started. Mystery species:", mysterySpecies.name); // For debugging: REMOVE IN FINAL VERSION
+    renderGameTree(); // Initial render of the totally blank tree
+    console.log("Game started. Mystery species (for debugging, will remove in final version):", mysterySpecies.name);
 }
 
 // Processes a player's guess
@@ -244,21 +240,16 @@ function processGuess(event) {
 
     guessedSpeciesHistory.push(guessedNode.id); // Store the ID of the valid guess
 
-    // Mark the guessed node as revealed
-    revealedNodes.add(guessedNode.id);
-
     // If the guess is correct
     if (guessedNode.id === mysterySpecies.id) {
-        gameMessage.textContent = `Congratulations! You guessed "${mysterySpecies.name}"!`;
+        gameMessage.textContent = `Congratulations! You guessed "${mysterySpecies.name}" in ${guessedSpeciesHistory.length} guesses!`;
         submitGuessBtn.disabled = true;
         speciesGuessInput.disabled = true;
         restartGameBtn.style.display = 'block';
         guessForm.style.display = 'none';
 
-        // Ensure mystery species is fully revealed (no ???)
-        revealedNodes.add(mysterySpecies.id);
-        // And ensure path to it is revealed if not already
-        revealPath(mysterySpecies.id); // Final revelation if it wasn't already
+        // Ensure the path to the mystery species (which is now also the guessed species) is fully revealed
+        revealPath(mysterySpecies.id); // Call with mysterySpecies.id
     } else {
         gameMessage.textContent = `"${guessedNode.name}" is not the one. Keep guessing!`;
         // Reveal the path from the guessed species to its common ancestor with the mystery species
@@ -268,11 +259,16 @@ function processGuess(event) {
     renderGameTree(); // Re-render the tree with the new revealed path
 }
 
-// --- Tree Rendering (SVG) ---
-// This is a placeholder. The actual SVG rendering logic will go here.
-// It will dynamically create/update SVG elements based on 'revealedNodes' and 'revealedEdges'.
+// --- UPDATED: Tree Rendering (SVG) ---
 function renderGameTree() {
     gameTreeSvg.innerHTML = ''; // Clear previous SVG content
+
+    if (flatTreeData.length === 0) {
+        // This case should be handled by loadTreeData error, but as a fallback
+        gameTreeSvg.textContent = "Tree data not available.";
+        return;
+    }
+
     // Determine nodes to consider for layout. Only revealed ones, plus their parents up to root.
     const nodesForLayout = new Set();
     revealedNodes.forEach(id => {
@@ -283,119 +279,129 @@ function renderGameTree() {
         }
     });
 
-// If no nodes are revealed yet (e.g., at game start), the tree should be totally blank.
-if (nodesForLayout.size === 0) {
-    gameTreeSvg.innerHTML = ''; // Ensure it's explicitly cleared
-    gameTreeSvg.style.height = `0px`; // Collapse SVG height
-    return; // Render nothing if no nodes are revealed
-}
-    if (flatTreeData.length === 0) {
-        // This case should be handled by loadTreeData error, but as a fallback
-        gameTreeSvg.textContent = "Tree data not available.";
-        return;
+    // If no nodes are revealed yet (e.g., at game start), the tree should be totally blank.
+    if (nodesForLayout.size === 0) {
+        gameTreeSvg.innerHTML = ''; // Ensure it's explicitly cleared
+        gameTreeSvg.style.height = `0px`; // Collapse SVG height
+        return; // Render nothing if no nodes are revealed
     }
 
-    // --- Basic Node Positioning (for MVP) ---
-    // This is a simplified layout. For complex trees, you might use a library
-    // like D3.js or a custom layout algorithm.
-    // For now, we'll try a simple layer-by-layer horizontal or vertical layout.
-    // Let's aim for a left-to-right layout.
+    // Filter flatTreeData to only include nodes that need to be laid out
+    const currentLayoutNodes = flatTreeData.filter(node => nodesForLayout.has(node.id));
 
-    const svgWidth = gameTreeSvg.clientWidth;
-    const svgHeight = gameTreeSvg.clientHeight;
-    const nodeRadius = 15;
-    const nodePadding = 30; // Space between nodes horizontally/vertically
-    const levelSpacing = 100; // Vertical spacing between levels (depth)
-
-    // Calculate depth for each node
+    // Calculate depth for each node *in the currentLayoutNodes set*
     const nodeDepths = new Map();
-    function calculateDepth(nodeId, currentDepth) {
-        if (nodeDepths.has(nodeId)) return nodeDepths.get(nodeId); // Already calculated
-        nodeDepths.set(nodeId, currentDepth);
-        const children = flatTreeData.filter(n => n.parentId === nodeId);
-        children.forEach(child => calculateDepth(child.id, currentDepth + 1));
-    }
-    // Start from root nodes
-    flatTreeData.filter(node => node.parentId === null).forEach(root => calculateDepth(root.id, 0));
-
-
-    // Group nodes by depth for layout
-    const nodesByDepth = new Map();
-    flatTreeData.forEach(node => {
-        const depth = nodeDepths.get(node.id) || 0; // Default to 0 if no depth (e.g., orphan)
-        if (!nodesByDepth.has(depth)) {
-            nodesByDepth.set(depth, []);
+    // Find true root nodes among the nodesForLayout (those without parents in the layout set, or global parents are null)
+    currentLayoutNodes.filter(node => !node.parentId || !nodesForLayout.has(node.parentId)).forEach(root => {
+        // Ensure we find the highest ancestor in the displayed tree for consistent depth calculation
+        let actualRootNode = root;
+        while(actualRootNode.parentId && nodesForLayout.has(actualRootNode.parentId)) {
+            actualRootNode = findNodeById(actualRootNode.parentId);
         }
-        nodesByDepth.get(depth).push(node);
+        calculateDepthForLayout(actualRootNode.id, 0, nodeDepths, currentLayoutNodes);
     });
 
-    // Assign X and Y coordinates
-    const nodePositions = new Map(); // Map node ID to {x, y}
+    // Helper to calculate depth specifically for the *current* layout set
+    function calculateDepthForLayout(nodeId, currentDepth, depthMap, availableNodes) {
+        if (depthMap.has(nodeId)) return; // Already calculated
+        depthMap.set(nodeId, currentDepth);
+        availableNodes.filter(n => n.parentId === nodeId).forEach(child => {
+            calculateDepthForLayout(child.id, currentDepth + 1, depthMap, availableNodes);
+        });
+    }
+
+    const svgWidth = gameTreeSvg.clientWidth;
+    const nodeRadius = 15;
+    const nodePadding = 30; // Vertical padding between elements at different levels
+    const levelSpacing = 100; // Vertical spacing between levels (depth)
+
+    const nodesByDepth = new Map();
+    currentLayoutNodes.forEach(node => {
+        const depth = nodeDepths.get(node.id);
+        if (depth !== undefined) { // Only consider nodes for which depth was calculated
+            if (!nodesByDepth.has(depth)) {
+                nodesByDepth.set(depth, []);
+            }
+            nodesByDepth.get(depth).push(node);
+        }
+    });
+
     let maxDepth = 0;
     if (nodesByDepth.size > 0) {
         maxDepth = Math.max(...Array.from(nodesByDepth.keys()));
     }
 
-    let currentY = nodePadding; // Y position for the first node at this depth
+    // Determine max number of nodes in any level to set horizontal scaling
+    let maxNodesInLevel = 0;
+    nodesByDepth.forEach(nodes => {
+        if (nodes.length > maxNodesInLevel) {
+            maxNodesInLevel = nodes.length;
+        }
+    });
+    // Dynamically adjust horizontal spacing based on max nodes in a level
+    const minHorizontalNodeSpace = nodeRadius * 2 + nodePadding;
+    let effectiveHorizontalSpace = svgWidth / (maxNodesInLevel + 1);
+    effectiveHorizontalSpace = Math.max(effectiveHorizontalSpace, minHorizontalNodeSpace);
+
+
+    // Assign X and Y coordinates (dynamic centering per level)
+    const nodePositions = new Map(); // Map node ID to {x, y}
     for (let depth = 0; depth <= maxDepth; depth++) {
         const nodesInLevel = nodesByDepth.get(depth) || [];
-        const levelWidth = nodesInLevel.length * (nodeRadius * 2 + nodePadding);
-        let currentX = (svgWidth - levelWidth) / 2 + nodeRadius; // Center the level
+        // Sort nodes in level by ID to ensure consistent horizontal order across renders
+        nodesInLevel.sort((a, b) => a.id.localeCompare(b.id));
+
+        const levelTotalWidth = nodesInLevel.length * effectiveHorizontalSpace;
+        let currentX = (svgWidth - levelTotalWidth) / 2 + effectiveHorizontalSpace / 2; // Center offset
 
         nodesInLevel.forEach(node => {
             const x = currentX;
-            const y = nodePadding + (depth * levelSpacing); // Y based on depth
+            const y = nodeRadius + (depth * levelSpacing); // Y based on depth
             nodePositions.set(node.id, { x, y });
-            currentX += (nodeRadius * 2 + nodePadding);
+            currentX += effectiveHorizontalSpace;
         });
     }
 
-    // Adjust SVG height if tree is taller than initial height
-    const calculatedHeight = nodePadding + (maxDepth * levelSpacing) + nodePadding;
-    if (calculatedHeight > svgHeight) {
-        gameTreeSvg.style.height = `${calculatedHeight}px`;
-    }
-
+    const calculatedHeight = nodeRadius + (maxDepth * levelSpacing) + nodeRadius + 20; // Add some margin
+    gameTreeSvg.style.height = `${calculatedHeight}px`; // Set height via style for responsiveness
+    gameTreeSvg.setAttribute('width', svgWidth); // Set SVG attribute for viewBox/scaling
 
     // 1. Draw Paths (Links)
-    flatTreeData.forEach(node => {
-        if (node.parentId) {
+    currentLayoutNodes.forEach(node => {
+        if (node.parentId && nodesForLayout.has(node.parentId)) { // Only draw if parent is also in the current layout
             const parentPos = nodePositions.get(node.parentId);
             const childPos = nodePositions.get(node.id);
 
-            if (parentPos && childPos) {
+            // Only draw path if the edge is marked as revealed
+            const edgeId = `${node.parentId}-${node.id}`;
+            if (parentPos && childPos && revealedEdges.has(edgeId)) {
                 const linkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                linkPath.setAttribute('d', `M${parentPos.x},${parentPos.y} L${childPos.x},${childPos.y}`); // Simple straight line
+                // Simple straight line for now for clarity, can be curved later
+                linkPath.setAttribute('d', `M${parentPos.x},${parentPos.y} L${childPos.x},${childPos.y}`);
                 linkPath.classList.add('link-path');
-
-                // Check if this edge should be revealed
-                if (revealedEdges.has(`${node.parentId}-${node.id}`)) {
-                    linkPath.classList.add('revealed-link-path');
-                }
+                linkPath.classList.add('revealed-link-path'); // If drawn, it's revealed
                 gameTreeSvg.appendChild(linkPath);
             }
         }
     });
 
     // 2. Draw Nodes (Circles or Rectangles) and Text
-    flatTreeData.forEach(node => {
+    currentLayoutNodes.forEach(node => {
         const pos = nodePositions.get(node.id);
         if (pos) {
             const isMystery = (mysterySpecies && node.id === mysterySpecies.id);
             const isGuessed = guessedSpeciesHistory.includes(node.id); // Check if this specific node was a guess
-            const isRevealedNode = revealedNodes.has(node.id); // Check if this node is in our revealed set
 
-            // Only draw nodes that are explicitly revealed or are the mystery species.
-            // If it's not in revealedNodes and it's not the mystery species, skip drawing it.
-            if (!isRevealedNode && !isMystery) {
-                return; // Skip drawing unrevealed nodes
-            }
-
-            // Create a group for each node (circle/rect + text)
+            // Create a group for each node (shape + text)
             const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            g.classList.add('node-group'); // For general node styling
+            g.classList.add('node-group');
+            // Add a data attribute for easier debugging/inspection if needed
+            g.setAttribute('data-node-id', node.id);
+
 
             let shape;
+            let nodeNameDisplay = node.name; // Default name
+
             if (node.type === 'family') {
                 shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 shape.setAttribute('r', nodeRadius);
@@ -404,8 +410,10 @@ if (nodesForLayout.size === 0) {
                 shape.classList.add('node-circle');
             } else { // Species
                 shape = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                const textWidth = node.name.length * 6 + 10; // Rough estimate for text width
-                const rectWidth = Math.max(nodeRadius * 2, textWidth); // Ensure rect is wide enough
+                // Adjust text content for width estimation
+                const tempTextContent = (isMystery && !isGuessed) ? '???' : node.name;
+                const textWidthEstimate = tempTextContent.length * 6 + 10; // Rough estimate for text width, adjust font-size in CSS
+                const rectWidth = Math.max(nodeRadius * 2.5, textWidthEstimate); // Ensure rect is wide enough
                 const rectHeight = nodeRadius * 2;
                 shape.setAttribute('x', pos.x - rectWidth / 2);
                 shape.setAttribute('y', pos.y - rectHeight / 2);
@@ -414,16 +422,24 @@ if (nodesForLayout.size === 0) {
                 shape.setAttribute('rx', 5); // Rounded corners
                 shape.setAttribute('ry', 5);
                 shape.classList.add('node-rect');
+
+                if (isMystery && !isGuessed) {
+                    nodeNameDisplay = '???'; // Override for mystery not yet guessed
+                }
             }
 
-            // Apply specific classes for styling
+            // Apply specific classes for styling (order matters for precedence)
             if (isMystery) {
                 g.classList.add('mystery-node');
-            } else if (isGuessed) {
-                g.classList.add('guessed-node');
-            } else if (isRevealed) {
-                g.classList.add('revealed-node');
             }
+            if (isGuessed) { // If it's one of the actual guesses (this will override mystery-node if it IS the mystery)
+                g.classList.add('guessed-node');
+            }
+            // If it's a family or an un-guessed species on the path, and not already colored by mystery/guessed
+            if (!g.classList.contains('mystery-node') && !g.classList.contains('guessed-node')) {
+                 g.classList.add('revealed-node');
+            }
+
 
             g.appendChild(shape);
 
@@ -432,22 +448,12 @@ if (nodesForLayout.size === 0) {
             text.setAttribute('x', pos.x);
             text.setAttribute('y', pos.y + 4); // Adjust for vertical centering
             text.classList.add('node-text');
-
-            // Display ??? if mystery and not yet guessed
-            if (isMystery && !isGuessed) {
-                text.textContent = '???';
-            } else {
-                text.textContent = node.name;
-            }
+            text.textContent = nodeNameDisplay; // Use adjusted name
             g.appendChild(text);
 
             gameTreeSvg.appendChild(g);
         }
     });
-
-    // Finally, ensure the SVG dimensions are correctly set for viewing
-    gameTreeSvg.setAttribute('width', svgWidth);
-    gameTreeSvg.setAttribute('height', calculatedHeight > svgHeight ? calculatedHeight : svgHeight);
 }
 
 
