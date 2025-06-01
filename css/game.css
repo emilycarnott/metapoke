@@ -1,4 +1,3 @@
-
 /* css/game.css */
 
 body {
@@ -138,8 +137,6 @@ main {
 #game-tree-svg {
     display: block; /* Remove extra space below SVG */
     border-radius: 8px;
-    /* Basic tree node styling for SVG */
-    /* This will be mostly handled by JS adding classes to SVG elements */
 }
 
 /* SVG Node Styles */
@@ -194,8 +191,6 @@ main {
     stroke-width: 3;
 }
 
-/* css/game.css - Add to the end of the file */
-
 /* Node Info Popup Styles */
 .node-info-popup {
     display: none; /* Hidden by default */
@@ -213,8 +208,7 @@ main {
     max-height: 80vh; /* Limit height */
     overflow-y: auto; /* Scroll if content is too tall */
     text-align: center;
-    /* Optional: Add an overlay effect */
-    pointer-events: auto; /* Allow clicks on the popup itself */
+    pointer-events: auto; /* CRITICAL: Ensure clicks register on the popup itself */
 }
 
 .node-info-popup h3 {
