@@ -15,6 +15,11 @@ const loadJsonInput = document.getElementById('loadJsonInput');
 const loadJsonBtn = document.getElementById('loadJsonBtn');
 const exportJsonBtn = document.getElementById('exportJsonBtn');
 
+// Add these console logs to check if buttons are found
+console.log("addFamilyBtn element:", addFamilyBtn);
+console.log("addSpeciesBtn element:", addSpeciesBtn);
+console.log("loadJsonBtn element:", loadJsonBtn); // Just to compare with a working button
+
 
 // Function to generate a unique ID for each node
 function generateUUID() {
@@ -179,8 +184,13 @@ function handleDragEnd(event) {
 // --- Node Creation Functions ---
 
 function createNode(type) {
+    console.log(`Attempting to create a ${type} node.`); // Add this log!
     const name = prompt(`Enter ${type} name:`);
-    if (!name) return;
+    if (!name) {
+        console.log("Node creation cancelled by user (no name)."); // Add this log!
+        return; // User cancelled
+    }
+
 
     const description = prompt(`Enter description for ${name}:`);
     const imageUrl = prompt(`Enter image URL for ${name} (optional):`);
@@ -426,6 +436,74 @@ loadJsonInput.addEventListener('change', (event) => {
     reader.readAsText(file); // Read the file as text
 });
 
+// --- Event Listeners ---
+
+// Make sure these two blocks are present!
+if (addFamilyBtn) {
+    addFamilyBtn.addEventListener('click', () => {
+        console.log("Add Family button click event detected!"); // Keep for testing, remove later
+        createNode('family');
+    });
+} else {
+    console.error("ERROR: addFamilyBtn element not found for event listener attachment.");
+}
+
+if (addSpeciesBtn) {
+    addSpeciesBtn.addEventListener('click', () => {
+        console.log("Add Species button click event detected!"); // Keep for testing, remove later
+        createNode('species');
+    });
+} else {
+    console.error("ERROR: addSpeciesBtn element not found for event listener attachment.");
+}
+
+
+// Ensure your other event listeners are also present:
+if (saveEditBtn) { saveEditBtn.addEventListener('click', saveNodeChanges); }
+if (deleteNodeBtn) { deleteNodeBtn.addEventListener('click', deleteSelectedNode); }
+if (loadJsonBtn) { loadJsonBtn.addEventListener('click', () => { loadJsonInput.click(); }); }
+// Make sure loadJsonInput's 'change' listener is there too (it's a longer block)
+if (loadJsonInput) {
+    loadJsonInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const loadedNestedData = JSON.parse(e.target.result);
+                if (!Array.isArray(loadedNestedData) || loadedNestedData.some(node => !node.id || !node.name)) {
+                    alert('Invalid JSON file format. Please ensure it contains an array of nodes with "id" and "name" properties.');
+                    return;
+                }
+                treeData = convertNestedToFlat(loadedNestedData);
+                renderTree();
+                alert('Tree loaded successfully from JSON file!');
+                event.target.value = ''; // Clear input
+            } catch (error) {
+                console.error('Error parsing JSON or converting tree:', error);
+                alert('Error loading JSON file. Please ensure it is a valid JSON format.');
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+if (exportJsonBtn) {
+    exportJsonBtn.addEventListener('click', () => {
+        const nestedData = convertFlatToNested(treeData);
+        const jsonString = JSON.stringify(nestedData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tree_of_life.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('Tree exported as tree_of_life.json!');
+    });
+}
 
 // --- Initial Load ---
 
