@@ -7,7 +7,7 @@ export function renderGameTree(options) {
         gameTreeSvg,
         flatTreeData,
         revealedNodes,
-        revealedEdges,
+        revealedEdges, // Now includes "direct-LCA_ID-SPECIES_ID" strings
         mysterySpecies,
         guessedSpeciesHistory,
         onNodeClick
@@ -20,114 +20,119 @@ export function renderGameTree(options) {
         return;
     }
 
-    // Determine nodes to consider for layout. Only revealed ones (as per the new revelation logic).
-    const nodesForLayout = new Set(revealedNodes); // Directly use revealedNodes for layout
+    const nodesForLayout = Array.from(revealedNodes).map(id => findNodeById(id, flatTreeData));
 
-    if (nodesForLayout.size === 0) {
+    if (nodesForLayout.length === 0) {
         gameTreeSvg.innerHTML = '';
         gameTreeSvg.style.height = `0px`;
         return;
     }
 
-    const currentLayoutNodes = flatTreeData.filter(node => nodesForLayout.has(node.id));
-
-    // Calculate depth for each node within its *revealed sub-tree context*
-    const nodeDepths = new Map();
-    // For this new revelation, the LCA is the 'effective root' of the displayed sub-tree.
-    // So, find the LCA (the single family node in revealedNodes) and start depth calculation from there.
-    const lcaNode = currentLayoutNodes.find(node => node.type === 'family' && revealedNodes.has(node.id));
-
-    if (lcaNode) {
-        calculateDepthForLayout(lcaNode.id, 0, nodeDepths, currentLayoutNodes, flatTreeData);
-    } else {
-        // Fallback: If for some reason no LCA is revealed yet (e.g., first guess has identical nodes or just species)
-        // just calculate depth relative to the highest node in currentLayoutNodes
-        currentLayoutNodes.filter(node => !node.parentId || !nodesForLayout.has(node.parentId)).forEach(root => {
-            calculateDepthForLayout(root.id, 0, nodeDepths, currentLayoutNodes, flatTreeData);
-        });
-    }
-
-    function calculateDepthForLayout(nodeId, currentDepth, depthMap, availableNodes, flatTree) {
-        if (depthMap.has(nodeId)) return;
-        depthMap.set(nodeId, currentDepth);
-        availableNodes.filter(n => n.parentId === nodeId).forEach(child => {
-            calculateDepthForLayout(child.id, currentDepth + 1, depthMap, availableNodes, flatTree);
-        });
-    }
+    // --- NEW LAYOUT LOGIC FOR SPARSE CLUSTERS ---
+    // The goal is to lay out multiple "star" clusters (LCA + its direct species)
+    // without implying a full hierarchical tree structure from the root.
 
     const svgWidth = gameTreeSvg.clientWidth;
     const nodeRadius = 15;
-    const nodePadding = 30;
-    const levelSpacing = 100;
+    const nodePadding = 30; // Space between nodes
+    const clusterVerticalSpacing = 150; // Vertical space between different LCA clusters
+    const branchLength = 100; // Length of the 'arms' from LCA to species
 
-    const nodesByDepth = new Map();
-    currentLayoutNodes.forEach(node => {
-        const depth = nodeDepths.get(node.id);
-        if (depth !== undefined) {
-            if (!nodesByDepth.has(depth)) {
-                nodesByDepth.set(depth, []);
+    const nodePositions = new Map(); // Map node ID to {x, y}
+    let currentYOffset = nodePadding; // Tracks the current vertical position for placing clusters
+
+    // Identify unique LCA nodes that are currently revealed
+    const uniqueLCAIds = new Set();
+    revealedEdges.forEach(edgeId => {
+        if (edgeId.startsWith('direct-')) {
+            const parts = edgeId.split('-');
+            uniqueLCAIds.add(parts[1]); // The LCA ID is the second part
+        }
+    });
+
+    // Layout each unique LCA cluster
+    Array.from(uniqueLCAIds).sort().forEach(lcaId => { // Sort for consistent order
+        const lcaNode = findNodeById(lcaId, flatTreeData);
+        if (!lcaNode) return;
+
+        const clusterNodes = [lcaNode]; // Start with the LCA
+        const childrenNodes = []; // Nodes directly linked to this LCA (guess/mystery species)
+
+        revealedEdges.forEach(edgeId => {
+            if (edgeId.startsWith('direct-')) {
+                const parts = edgeId.split('-');
+                if (parts[1] === lcaId) { // This edge starts from our current LCA
+                    const speciesNode = findNodeById(parts[2], flatTreeData);
+                    if (speciesNode && revealedNodes.has(speciesNode.id)) {
+                        childrenNodes.push(speciesNode);
+                    }
+                }
             }
-            nodesByDepth.get(depth).push(node);
-        }
-    });
-
-    let maxDepth = 0;
-    if (nodesByDepth.size > 0) {
-        maxDepth = Math.max(...Array.from(nodesByDepth.keys()));
-    }
-
-    let maxNodesInLevel = 0;
-    nodesByDepth.forEach(nodes => {
-        if (nodes.length > maxNodesInLevel) {
-            maxNodesInLevel = nodes.length;
-        }
-    });
-    const minHorizontalNodeSpace = nodeRadius * 2 + nodePadding;
-    let effectiveHorizontalSpace = svgWidth / (maxNodesInLevel + 1);
-    effectiveHorizontalSpace = Math.max(effectiveHorizontalSpace, minHorizontalNodeSpace);
-
-
-    const nodePositions = new Map();
-    for (let depth = 0; depth <= maxDepth; depth++) {
-        const nodesInLevel = nodesByDepth.get(depth) || [];
-        nodesInLevel.sort((a, b) => a.id.localeCompare(b.id));
-
-        const levelTotalWidth = nodesInLevel.length * effectiveHorizontalSpace;
-        let currentX = (svgWidth - levelTotalWidth) / 2 + effectiveHorizontalSpace / 2;
-
-        nodesInLevel.forEach(node => {
-            const x = currentX;
-            const y = nodeRadius + (depth * levelSpacing);
-            nodePositions.set(node.id, { x, y });
-            currentX += effectiveHorizontalSpace;
         });
-    }
 
-    const calculatedHeight = nodeRadius + (maxDepth * levelSpacing) + nodeRadius + 20;
-    gameTreeSvg.style.height = `${calculatedHeight}px`;
+        // Remove duplicates from childrenNodes if any
+        const uniqueChildrenNodes = Array.from(new Set(childrenNodes.map(n => n.id)))
+                                    .map(id => findNodeById(id, flatTreeData));
+
+
+        // Calculate positions for this cluster
+        const lcaX = svgWidth / 2; // Center LCA horizontally for now
+        const lcaY = currentYOffset + branchLength; // Position LCA a bit down from current offset
+
+        nodePositions.set(lcaNode.id, { x: lcaX, y: lcaY });
+
+        // Position children in a circle or line around the LCA
+        const numChildren = uniqueChildrenNodes.length;
+        if (numChildren > 0) {
+            // Distribute children horizontally around the LCA
+            // For 2 children, simple left/right. For more, can use circular.
+            const horizontalSpacing = (svgWidth - nodePadding * 2) / (numChildren + 1);
+            let currentChildX = nodePadding + horizontalSpacing;
+
+            uniqueChildrenNodes.sort((a,b) => a.name.localeCompare(b.name)).forEach((childNode, index) => {
+                const childX = currentChildX;
+                const childY = lcaY + branchLength; // Position children below LCA
+                nodePositions.set(childNode.id, { x: childX, y: childY });
+                currentChildX += horizontalSpacing;
+            });
+        }
+        currentYOffset += (branchLength + nodeRadius * 2 + clusterVerticalSpacing); // Advance Y for next cluster, assuming 2 levels
+    });
+
+    const totalHeight = currentYOffset; // Final height for SVG
+
+    gameTreeSvg.style.height = `${totalHeight}px`;
     gameTreeSvg.setAttribute('width', svgWidth);
 
-    // 1. Draw Paths (Links)
-    currentLayoutNodes.forEach(node => {
-        if (node.parentId && nodesForLayout.has(node.parentId)) { // Only draw if parent is also in the current layout
-            const parentPos = nodePositions.get(node.parentId);
-            const childPos = nodePositions.get(node.id);
 
-            const edgeId = `${node.parentId}-${node.id}`;
-            if (parentPos && childPos && revealedEdges.has(edgeId)) {
+    // 1. Draw "Direct Jump" Paths (from LCA to species, skipping intermediates)
+    revealedEdges.forEach(edgeId => {
+        if (edgeId.startsWith('direct-')) {
+            const parts = edgeId.split('-'); // e.g., ["direct", "LCA_ID", "SPECIES_ID"]
+            const lcaNodeId = parts[1];
+            const speciesNodeId = parts[2];
+
+            const lcaPos = nodePositions.get(lcaNodeId);
+            const speciesPos = nodePositions.get(speciesNodeId);
+
+            if (lcaPos && speciesPos) {
                 const linkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                linkPath.setAttribute('d', `M${parentPos.x},${parentPos.y} L${childPos.x},${childPos.y}`);
+                // Draw a direct line from LCA to the species
+                linkPath.setAttribute('d', `M${lcaPos.x},${lcaPos.y} L${speciesPos.x},${speciesPos.y}`);
                 linkPath.classList.add('link-path');
-                linkPath.classList.add('revealed-link-path');
+                linkPath.classList.add('direct-link-path'); // Add a specific class for styling these direct links
                 gameTreeSvg.appendChild(linkPath);
             }
         }
     });
 
+
     // 2. Draw Nodes (Circles or Rectangles) and Text
-    currentLayoutNodes.forEach(node => {
-        const pos = nodePositions.get(node.id);
-        if (pos) {
+    revealedNodes.forEach(nodeId => { // Iterate over revealedNodes (not nodesForLayout) to draw all of them
+        const node = findNodeById(nodeId, flatTreeData);
+        const pos = nodePositions.get(nodeId);
+
+        if (node && pos) { // Only draw if node data and position exist
             const isMystery = (mysterySpecies && node.id === mysterySpecies.id);
             const isGuessed = guessedSpeciesHistory.includes(node.id);
 
