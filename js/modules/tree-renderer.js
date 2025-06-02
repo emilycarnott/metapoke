@@ -13,6 +13,9 @@ export function renderGameTree(options) {
         onNodeClick
     } = options;
 
+    console.log("DEBUG: renderGameTree called."); // NEW LOG
+    console.log("DEBUG: revealedNodes passed to renderGameTree:", Array.from(revealedNodes)); // NEW LOG
+
     gameTreeSvg.innerHTML = '';
 
     if (flatTreeData.length === 0) {
@@ -20,17 +23,22 @@ export function renderGameTree(options) {
         return;
     }
 
-    const nodesForLayout = Array.from(revealedNodes).map(id => findNodeById(id, flatTreeData));
+    // --- NEW LAYOUT LOGIC FOR SPARSE CLUSTERS ---
+    // The goal is to lay out multiple "star" clusters (LCA + its direct species)
+    // without implying a full hierarchical tree structure from the root.
+
+    // Filter revealedNodes to get actual node objects. Filter out any nulls if findNodeById fails.
+    const nodesForLayout = Array.from(revealedNodes).map(id => findNodeById(id, flatTreeData)).filter(Boolean);
+
+    console.log("DEBUG: nodesForLayout (IDs mapped to actual node objects, nulls filtered):", nodesForLayout); // NEW LOG
+    console.log("DEBUG: nodesForLayout.length:", nodesForLayout.length); // NEW LOG
 
     if (nodesForLayout.length === 0) {
         gameTreeSvg.innerHTML = '';
         gameTreeSvg.style.height = `0px`;
+        console.warn("DEBUG: renderGameTree: No valid nodes for layout. Returning early."); // NEW LOG
         return;
     }
-
-    // --- NEW LAYOUT LOGIC FOR SPARSE CLUSTERS ---
-    // The goal is to lay out multiple "star" clusters (LCA + its direct species)
-    // without implying a full hierarchical tree structure from the root.
 
     const svgWidth = gameTreeSvg.clientWidth;
     const nodeRadius = 15;
@@ -53,27 +61,26 @@ export function renderGameTree(options) {
     // Layout each unique LCA cluster
     Array.from(uniqueLCAIds).sort().forEach(lcaId => { // Sort for consistent order
         const lcaNode = findNodeById(lcaId, flatTreeData);
-        if (!lcaNode) return;
+        if (!lcaNode) {
+            console.warn(`DEBUG: LCA node ${lcaId} not found in flatTreeData for layout.`);
+            return;
+        }
 
-        const clusterNodes = [lcaNode]; // Start with the LCA
-        const childrenNodes = []; // Nodes directly linked to this LCA (guess/mystery species)
-
+        const clusterChildren = []; // Nodes directly linked to this LCA (guess/mystery species)
         revealedEdges.forEach(edgeId => {
             if (edgeId.startsWith('direct-')) {
                 const parts = edgeId.split('-');
                 if (parts[1] === lcaId) { // This edge starts from our current LCA
                     const speciesNode = findNodeById(parts[2], flatTreeData);
-                    if (speciesNode && revealedNodes.has(speciesNode.id)) {
-                        childrenNodes.push(speciesNode);
+                    if (speciesNode && revealedNodes.has(speciesNode.id)) { // Ensure child is also revealed
+                        clusterChildren.push(speciesNode);
                     }
                 }
             }
         });
 
-        // Remove duplicates from childrenNodes if any
-        const uniqueChildrenNodes = Array.from(new Set(childrenNodes.map(n => n.id)))
+        const uniqueChildrenNodes = Array.from(new Set(clusterChildren.map(n => n.id)))
                                     .map(id => findNodeById(id, flatTreeData));
-
 
         // Calculate positions for this cluster
         const lcaX = svgWidth / 2; // Center LCA horizontally for now
@@ -81,22 +88,20 @@ export function renderGameTree(options) {
 
         nodePositions.set(lcaNode.id, { x: lcaX, y: lcaY });
 
-        // Position children in a circle or line around the LCA
+        // Position children in a line below the LCA, distributed horizontally
         const numChildren = uniqueChildrenNodes.length;
         if (numChildren > 0) {
-            // Distribute children horizontally around the LCA
-            // For 2 children, simple left/right. For more, can use circular.
-            const horizontalSpacing = (svgWidth - nodePadding * 2) / (numChildren + 1);
-            let currentChildX = nodePadding + horizontalSpacing;
+            const childrenClusterWidth = numChildren * (nodeRadius * 2 + nodePadding);
+            let currentChildX = (svgWidth - childrenClusterWidth) / 2 + nodeRadius; // Center the children block
 
             uniqueChildrenNodes.sort((a,b) => a.name.localeCompare(b.name)).forEach((childNode, index) => {
                 const childX = currentChildX;
                 const childY = lcaY + branchLength; // Position children below LCA
                 nodePositions.set(childNode.id, { x: childX, y: childY });
-                currentChildX += horizontalSpacing;
+                currentChildX += (nodeRadius * 2 + nodePadding);
             });
         }
-        currentYOffset += (branchLength + nodeRadius * 2 + clusterVerticalSpacing); // Advance Y for next cluster, assuming 2 levels
+        currentYOffset += (branchLength + nodeRadius * 2 + clusterVerticalSpacing); // Advance Y for next cluster
     });
 
     const totalHeight = currentYOffset; // Final height for SVG
@@ -117,8 +122,7 @@ export function renderGameTree(options) {
 
             if (lcaPos && speciesPos) {
                 const linkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                // Draw a direct line from LCA to the species
-                linkPath.setAttribute('d', `M${lcaPos.x},${lcaPos.y} L${speciesPos.x},${speciesPos.y}`);
+                linkPath.setAttribute('d', `M${lcaPos.x},${lcaPos.y} L${speciesPos.x},${speciesPos.y}`); // Direct straight line
                 linkPath.classList.add('link-path');
                 linkPath.classList.add('direct-link-path'); // Add a specific class for styling these direct links
                 gameTreeSvg.appendChild(linkPath);
