@@ -6,9 +6,10 @@ let popupDescriptionElement;
 let popupImageElement;
 let popupCloseButtonElement;
 
+// This function ensures the tooltip DOM elements are found/created and initialized
 function initializeTooltipElements() {
     if (tooltipElement) {
-        return true;
+        return true; // Already initialized
     }
 
     tooltipElement = document.getElementById('node-info-popup');
@@ -27,14 +28,15 @@ function initializeTooltipElements() {
         return false;
     }
 
+    // Add the close button listener here once the button is found
     popupCloseButtonElement.addEventListener('click', hideTooltip);
-    console.log("Tooltip elements initialized and close button listener attached.");
+    console.log("DEBUG: Tooltip elements initialized and close button listener attached.");
     return true;
 }
 
 export function showTooltip(nodeData) {
     if (!initializeTooltipElements()) {
-        return;
+        return; // Exit if initialization failed
     }
 
     popupNameElement.textContent = nodeData.name;
@@ -50,7 +52,7 @@ export function showTooltip(nodeData) {
 
     tooltipElement.style.display = 'block';
     document.body.classList.add('popup-active');
-    console.log("Tooltip displayed for node:", nodeData.name, "Description:", nodeData.description);
+    console.log("DEBUG: Tooltip displayed for node:", nodeData.name, "Description:", nodeData.description);
 }
 
 export function hideTooltip() {
@@ -58,5 +60,5 @@ export function hideTooltip() {
         tooltipElement.style.display = 'none';
     }
     document.body.classList.remove('popup-active');
-    console.log("Tooltip hidden.");
+    console.log("DEBUG: Tooltip hidden.");
 }
