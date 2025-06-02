@@ -53,7 +53,7 @@ function revealPath(guessNodeId) {
     revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`);
 
     if (guessNodeId === mysterySpecies.id) {
-        revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`);
+        revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`); // Ensure if guessed correctly, it's linked
     }
 
     // NEW LOGS to see content after revealPath
