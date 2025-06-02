@@ -27,9 +27,9 @@ export function renderGameTree(options) {
     // --- NEW LAYOUT LOGIC FOR SPARSE CLUSTERS ---
 
     // 1. Get actual node objects for layout, filtering out any nulls if findNodeById fails.
-    const actualRevealedNodeObjects = Array.from(revealedNodes) // Renamed from nodesForLayout for clarity
+    const actualRevealedNodeObjects = Array.from(revealedNodes)
                                   .map(id => findNodeById(id, flatTreeData))
-                                  .filter(Boolean); // Filters out null/undefined results
+                                  .filter(Boolean);
 
     console.log("DEBUG: actualRevealedNodeObjects (IDs mapped to actual node objects, nulls filtered):", actualRevealedNodeObjects);
     console.log("DEBUG: actualRevealedNodeObjects.length:", actualRevealedNodeObjects.length);
@@ -50,28 +50,25 @@ export function renderGameTree(options) {
     const nodePositions = new Map(); // Map node ID to {x, y}
     let currentYOffset = nodePadding; // Tracks the current vertical position for placing clusters
 
-    // 2. Identify unique LCA nodes that are currently revealed (these will be the center of each "star" cluster)
-    let uniqueLCAIds = new Set(); // Using `let` because we might filter it
-    revealedEdges.forEach(edgeId => {
-        if (edgeId.startsWith('direct-')) {
-            const parts = edgeId.split('-');
-            uniqueLCAIds.add(parts[1]); // The LCA ID is the second part in "direct-LCA_ID-SPECIES_ID"
-        }
-    });
+    // --- CRITICAL CHANGE: 2. Identify unique LCA nodes directly from revealed objects ---
+    // Instead of parsing edges, which might have issues with findNodeById,
+    // let's find the LCA among the actualRevealedNodeObjects.
+    const uniqueLCAIds = new Set(actualRevealedNodeObjects
+                                .filter(node => node.type === 'family') // LCAs are family nodes
+                                .map(node => node.id)); // Get their IDs
 
-    // --- CRITICAL CHANGE 1: Filter uniqueLCAIds to only include ones that are actually valid node objects ---
-    // This addresses the "LCA node X not found" warning by ensuring we only attempt to layout LCAs
-    // for which we have a valid node object in our `actualRevealedNodeObjects` array.
-    uniqueLCAIds = new Set(Array.from(uniqueLCAIds).filter(lcaId => findNodeById(lcaId, flatTreeData)));
-    console.log("DEBUG: Filtered Unique LCA IDs (ensuring node object exists):", Array.from(uniqueLCAIds));
-
+    console.log("DEBUG: Filtered Unique LCA IDs (identified from actualRevealedNodeObjects):", Array.from(uniqueLCAIds));
+    // --- END CRITICAL CHANGE ---
 
     // 3. Layout each unique LCA cluster
     Array.from(uniqueLCAIds).sort().forEach(lcaId => { // Sort for consistent order
-        // Retrieve the actual LCA node object - now we are more confident it exists
-        const lcaNode = findNodeById(lcaId, flatTreeData);
-        // We removed the `if (!lcaNode) { return; }` here because `uniqueLCAIds` is now filtered.
-        // If this still gives null, it's a deeper issue.
+        const lcaNode = findNodeById(lcaId, flatTreeData); // This call should now reliably work as uniqueLCAIds are confirmed.
+
+        // It should never be null here, but adding a check for robustness
+        if (!lcaNode) {
+             console.error(`DEBUG: Unexpected: LCA node ${lcaId} was in uniqueLCAIds but not found in flatTreeData.`);
+             return; // Skip if somehow still null
+        }
 
         const clusterChildren = []; // Nodes directly linked to this LCA (these will be guess/mystery species)
         revealedEdges.forEach(edgeId => {
@@ -82,7 +79,7 @@ export function renderGameTree(options) {
                     if (speciesNode && revealedNodes.has(speciesNode.id)) { // Ensure child is also revealed
                         clusterChildren.push(speciesNode);
                     } else {
-                        console.warn(`DEBUG: Child node ${parts[2]} for LCA ${lcaId} not found in flatTreeData or not in revealedNodes. Skipping child.`);
+                        console.warn(`DEBUG: Child node ${parts[2]} for LCA ${lcaId} not found or not in revealedNodes. Skipping child.`);
                     }
                 }
             }
