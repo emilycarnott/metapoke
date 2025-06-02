@@ -27,17 +27,17 @@ export function renderGameTree(options) {
     // --- NEW LAYOUT LOGIC FOR SPARSE CLUSTERS ---
 
     // 1. Get actual node objects for layout, filtering out any nulls if findNodeById fails.
-    const nodesForLayout = Array.from(revealedNodes)
+    const actualRevealedNodeObjects = Array.from(revealedNodes) // Renamed from nodesForLayout for clarity
                                   .map(id => findNodeById(id, flatTreeData))
                                   .filter(Boolean); // Filters out null/undefined results
 
-    console.log("DEBUG: nodesForLayout (IDs mapped to actual node objects, nulls filtered):", nodesForLayout);
-    console.log("DEBUG: nodesForLayout.length:", nodesForLayout.length);
+    console.log("DEBUG: actualRevealedNodeObjects (IDs mapped to actual node objects, nulls filtered):", actualRevealedNodeObjects);
+    console.log("DEBUG: actualRevealedNodeObjects.length:", actualRevealedNodeObjects.length);
 
-    if (nodesForLayout.length === 0) {
+    if (actualRevealedNodeObjects.length === 0) {
         gameTreeSvg.innerHTML = '';
         gameTreeSvg.style.height = `0px`;
-        console.warn("DEBUG: renderGameTree: No valid nodes for layout. Returning early.");
+        console.warn("DEBUG: renderGameTree: No valid node objects found for layout. Returning early.");
         return;
     }
 
@@ -51,7 +51,7 @@ export function renderGameTree(options) {
     let currentYOffset = nodePadding; // Tracks the current vertical position for placing clusters
 
     // 2. Identify unique LCA nodes that are currently revealed (these will be the center of each "star" cluster)
-    const uniqueLCAIds = new Set();
+    let uniqueLCAIds = new Set(); // Using `let` because we might filter it
     revealedEdges.forEach(edgeId => {
         if (edgeId.startsWith('direct-')) {
             const parts = edgeId.split('-');
@@ -59,15 +59,19 @@ export function renderGameTree(options) {
         }
     });
 
-    console.log("DEBUG: Unique LCA IDs derived from revealedEdges:", Array.from(uniqueLCAIds));
+    // --- CRITICAL CHANGE 1: Filter uniqueLCAIds to only include ones that are actually valid node objects ---
+    // This addresses the "LCA node X not found" warning by ensuring we only attempt to layout LCAs
+    // for which we have a valid node object in our `actualRevealedNodeObjects` array.
+    uniqueLCAIds = new Set(Array.from(uniqueLCAIds).filter(lcaId => findNodeById(lcaId, flatTreeData)));
+    console.log("DEBUG: Filtered Unique LCA IDs (ensuring node object exists):", Array.from(uniqueLCAIds));
+
 
     // 3. Layout each unique LCA cluster
     Array.from(uniqueLCAIds).sort().forEach(lcaId => { // Sort for consistent order
-        const lcaNode = findNodeById(lcaId, flatTreeData); // Retrieve the actual LCA node object
-        if (!lcaNode) {
-            console.warn(`DEBUG: LCA node ${lcaId} not found in flatTreeData (even though it's in revealedEdges). Skipping cluster layout.`);
-            return; // Skip this cluster if the LCA node object itself is missing
-        }
+        // Retrieve the actual LCA node object - now we are more confident it exists
+        const lcaNode = findNodeById(lcaId, flatTreeData);
+        // We removed the `if (!lcaNode) { return; }` here because `uniqueLCAIds` is now filtered.
+        // If this still gives null, it's a deeper issue.
 
         const clusterChildren = []; // Nodes directly linked to this LCA (these will be guess/mystery species)
         revealedEdges.forEach(edgeId => {
@@ -84,10 +88,9 @@ export function renderGameTree(options) {
             }
         });
 
-        // Ensure children are unique and retrieve their full node objects again
         const uniqueChildrenNodes = Array.from(new Set(clusterChildren.map(n => n.id)))
                                     .map(id => findNodeById(id, flatTreeData))
-                                    .filter(Boolean); // Filter any nulls if a child node somehow wasn't found
+                                    .filter(Boolean); // Filter any nulls from children too
 
         // Calculate positions for this specific cluster
         const lcaX = svgWidth / 2; // Center LCA horizontally
@@ -99,41 +102,39 @@ export function renderGameTree(options) {
         const numChildren = uniqueChildrenNodes.length;
         if (numChildren > 0) {
             const childrenClusterWidth = numChildren * (nodeRadius * 2 + nodePadding);
-            // Center the block of children nodes within the SVG width
             let currentChildX = (svgWidth - childrenClusterWidth) / 2 + nodeRadius;
 
             uniqueChildrenNodes.sort((a,b) => a.name.localeCompare(b.name)).forEach((childNode, index) => {
                 const childX = currentChildX;
-                const childY = lcaY + branchLength; // Position children below LCA
+                const childY = lcaY + branchLength;
                 nodePositions.set(childNode.id, { x: childX, y: childY });
                 currentChildX += (nodeRadius * 2 + nodePadding);
             });
         }
-        // Advance Y offset for the next cluster to be drawn below this one
         currentYOffset += (branchLength + nodeRadius * 2 + clusterVerticalSpacing);
     });
 
-    const totalHeight = currentYOffset; // Final height for the SVG canvas
+    const totalHeight = currentYOffset;
 
-    gameTreeSvg.style.height = `${totalHeight}px`; // Set height for the SVG element's style
-    gameTreeSvg.setAttribute('width', svgWidth); // Set SVG attribute for viewBox/scaling
+    gameTreeSvg.style.height = `${totalHeight}px`;
+    gameTreeSvg.setAttribute('width', svgWidth);
 
 
     // 1. Draw "Direct Jump" Paths (from LCA to species, skipping intermediates)
     revealedEdges.forEach(edgeId => {
-        if (edgeId.startsWith('direct-')) { // Only process our special direct links
-            const parts = edgeId.split('-'); // e.g., ["direct", "LCA_ID", "SPECIES_ID"]
+        if (edgeId.startsWith('direct-')) {
+            const parts = edgeId.split('-');
             const lcaNodeId = parts[1];
             const speciesNodeId = parts[2];
 
             const lcaPos = nodePositions.get(lcaNodeId);
             const speciesPos = nodePositions.get(speciesNodeId);
 
-            if (lcaPos && speciesPos) { // Ensure both positions were found
+            if (lcaPos && speciesPos) {
                 const linkPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                linkPath.setAttribute('d', `M${lcaPos.x},${lcaPos.y} L${speciesPos.x},${speciesPos.y}`); // Direct straight line
+                linkPath.setAttribute('d', `M${lcaPos.x},${lcaPos.y} L${speciesPos.x},${speciesPos.y}`);
                 linkPath.classList.add('link-path');
-                linkPath.classList.add('direct-link-path'); // Specific class for styling these direct links
+                linkPath.classList.add('direct-link-path');
                 gameTreeSvg.appendChild(linkPath);
             } else {
                 console.warn(`DEBUG: Missing positions for edge ${edgeId}. LCA Pos found: ${!!lcaPos}, Species Pos found: ${!!speciesPos}`);
@@ -143,23 +144,23 @@ export function renderGameTree(options) {
 
 
     // 2. Draw Nodes (Circles or Rectangles) and Text
-    revealedNodes.forEach(nodeId => { // Iterate over all IDs in revealedNodes to draw them
-        const node = findNodeById(nodeId, flatTreeData); // Retrieve the actual node object
-        const pos = nodePositions.get(nodeId); // Get its calculated position
+    // Iterate over revealedNodes (IDs), then look up the actual node object and its position
+    revealedNodes.forEach(nodeId => {
+        const node = findNodeById(nodeId, flatTreeData);
+        const pos = nodePositions.get(nodeId);
 
-        if (node && pos) { // Only draw if node data and position exist
+        if (node && pos) {
             const isMystery = (mysterySpecies && node.id === mysterySpecies.id);
             const isGuessed = guessedSpeciesHistory.includes(node.id);
 
-            const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); // Create a group for shape and text
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
             g.classList.add('node-group');
             g.setAttribute('data-node-id', node.id);
 
-            // Add click listener for popup
             g.addEventListener('click', (event) => {
-                event.stopPropagation(); // Prevents click from bubbling to document immediately
+                event.stopPropagation();
                 if (onNodeClick) {
-                    onNodeClick(node); // Call the provided callback with the node data
+                    onNodeClick(node);
                 }
             });
 
@@ -172,43 +173,40 @@ export function renderGameTree(options) {
                 shape.setAttribute('cx', pos.x);
                 shape.setAttribute('cy', pos.y);
                 shape.classList.add('node-circle');
-            } else { // Species (rectangles)
+            } else { // Species
                 shape = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                 const tempTextContent = (isMystery && !isGuessed) ? '???' : node.name;
-                const textWidthEstimate = tempTextContent.length * 6 + 10; // Simple estimate
-                const rectWidth = Math.max(nodeRadius * 2.5, textWidthEstimate); // Ensure wide enough
+                const textWidthEstimate = tempTextContent.length * 6 + 10;
+                const rectWidth = Math.max(nodeRadius * 2.5, textWidthEstimate);
                 const rectHeight = nodeRadius * 2;
                 shape.setAttribute('x', pos.x - rectWidth / 2);
                 shape.setAttribute('y', pos.y - rectHeight / 2);
                 shape.setAttribute('width', rectWidth);
                 shape.setAttribute('height', rectHeight);
-                shape.setAttribute('rx', 5); // Rounded corners
+                shape.setAttribute('rx', 5);
                 shape.setAttribute('ry', 5);
                 shape.classList.add('node-rect');
 
                 if (isMystery && !isGuessed) {
-                    nodeNameDisplay = '???'; // Display ??? for unguessed mystery species
+                    nodeNameDisplay = '???';
                 }
             }
 
-            // Apply specific classes for styling
             if (isMystery) {
                 g.classList.add('mystery-node');
             }
             if (isGuessed) {
                 g.classList.add('guessed-node');
             }
-            // If it's a revealed node that's not the mystery or guessed, apply default revealed style
             if (!g.classList.contains('mystery-node') && !g.classList.contains('guessed-node')) {
                  g.classList.add('revealed-node');
             }
 
             g.appendChild(shape);
 
-            // Add text label
             const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute('x', pos.x);
-            text.setAttribute('y', pos.y + 4); // Adjust for vertical centering
+            text.setAttribute('y', pos.y + 4);
             text.classList.add('node-text');
             text.textContent = nodeNameDisplay;
             g.appendChild(text);
