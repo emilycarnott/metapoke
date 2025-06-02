@@ -27,12 +27,15 @@ const guessForm = document.getElementById('guess-form');
 
 // --- UPDATED: Helper for Revelation (now very minimal and direct) ---
 function revealPath(guessNodeId) {
+    console.log("DEBUG: revealPath called for guess:", guessNodeId); // NEW LOG
+
     if (!mysterySpecies || !guessNodeId) {
         console.warn("Reveal path called without mystery species or guessNodeId.");
         return;
     }
 
     const currentLCAId = findLowestCommonAncestor(guessNodeId, mysterySpecies.id, flatTreeData);
+    console.log("DEBUG: Calculated LCA ID:", currentLCAId); // NEW LOG
     if (!currentLCAId) {
         console.warn("Could not find LCA for revelation for guess:", guessNodeId);
         return;
@@ -49,11 +52,13 @@ function revealPath(guessNodeId) {
     revealedEdges.add(`direct-${currentLCAId}-${guessNodeId}`);
     revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`);
 
-    // If the guessed species IS the mystery species, ensure it's still linked from its LCA
-    // (LCA might be the species itself if it's a root species, or its direct parent)
     if (guessNodeId === mysterySpecies.id) {
-        revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`); // Redundant but harmless, ensures link is present
+        revealedEdges.add(`direct-${currentLCAId}-${mysterySpecies.id}`);
     }
+
+    // NEW LOGS to see content after revealPath
+    console.log("DEBUG: revealedNodes after revealPath:", Array.from(revealedNodes));
+    console.log("DEBUG: revealedEdges after revealPath:", Array.from(revealedEdges));
 }
 
 // --- Game Core Functions ---
@@ -124,7 +129,7 @@ function startGame() {
     guessForm.style.display = 'flex';
 
     renderCurrentTree();
-    console.log("Game started. Mystery species (for debugging):", mysterySpecies.name);
+    console.log("DEBUG: Game started. Mystery species:", mysterySpecies.name);
 }
 
 function processGuess(event) {
@@ -177,11 +182,10 @@ function renderCurrentTree() {
         mysterySpecies,
         guessedSpeciesHistory,
         onNodeClick: (node) => {
-            // Popups will only show for nodes that are part of the currently revealed tree
-            if (revealedNodes.has(node.id)) {
+            if (revealedNodes.has(node.id)) { // Popups only show for nodes that are part of the currently revealed tree
                 showTooltip(node);
             } else {
-                hideTooltip(); // Hide if clicking an unrevealed part of the tree
+                hideTooltip();
             }
         }
     });
